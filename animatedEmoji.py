@@ -6,7 +6,7 @@ sense = SenseHat()
 # Define some colours
 g = (0, 255, 0) # Green
 r = (255, 0, 0) # Red
-b = (0, 0, 255) # Blue
+bl = (0, 0, 255) # Blue
 b = (0, 0, 0) # Black
 
 class Emoji:
@@ -35,7 +35,7 @@ class Emoji:
         ]
     else:
         self.image = [
-            b, b, b, b, b, b, b, b,
+            bl, bl, bl, bl, bl, bl, bl, bl,
             g, g, g, g, g, g, g, g,
             g, b, b, g, g, b, b, g,
             g, b, b, g, g, b, b, g,
