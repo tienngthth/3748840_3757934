@@ -73,7 +73,7 @@ eyes_mouth_pixels_1 = [
     red, whi, pur, whi, whi, pur, whi, red,
     red, whi, whi, whi, whi, whi, whi, red,
     bla, blu, blu, blu, blu, blu, blu, bla,
-    bla, bla, bla, bla, bla, bla, bla, bla,
+    bla, bla, blu, blu, blu, blu, bla, bla,
     bla, bla, blu, blu, blu, blu, bla, bla,
 ]
 
@@ -84,7 +84,7 @@ eyes_mouth_pixels_2 = [
     red, pur, whi, whi, pur, whi, whi, red,
     red, whi, whi, whi, whi, whi, whi, red,
     bla, blu, blu, blu, blu, blu, blu, bla,
-    bla, bla, whi, whi, whi, whi, bla, bla,
+    bla, bla, blu, whi, whi, blu, bla, bla,
     bla, bla, blu, blu, blu, blu, bla, bla,
 ]
 
@@ -106,7 +106,7 @@ eyes_mouth_pixels_4 = [
     red, whi, whi, pur, whi, whi, pur, red,
     red, whi, whi, whi, whi, whi, whi, red,
     bla, blu, blu, blu, blu, blu, blu, bla,
-    bla, bla, blu, blu, blu, blu, bla, bla,
+    bla, bla, blu, whi, whi, blu, bla, bla,
     bla, bla, blu, blu, blu, blu, bla, bla,
 ]
 
