@@ -2,7 +2,6 @@ from sense_hat import SenseHat
 from time import sleep
 
 sense = SenseHat()
-sense.low_light = True
 
 # Define some colors
 whi = (255, 255, 255)
@@ -177,9 +176,12 @@ class Emoji:
             sense.set_pixels(self.images[count % 4])
             sleep(0.3)
             count += 1
-    
-emojis = [Emoji(rainbow_mouth_pixels), Emoji(sword_pixels), Emoji(cat_pixels)]
 
-while True:
-    for emoji in emojis:
-        emoji.display()
+def main():
+    sense.low_light = True
+    emojis = [Emoji(rainbow_mouth_pixels), Emoji(sword_pixels), Emoji(cat_pixels)]
+    while True:
+        for emoji in emojis:
+            emoji.display()
+
+main()
