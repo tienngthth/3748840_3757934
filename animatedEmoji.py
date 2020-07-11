@@ -178,7 +178,6 @@ class Emoji:
             count += 1
 
 def main():
-    global sense
     sense.low_light = True
     emojis = [Emoji(rainbow_mouth_pixels), Emoji(sword_pixels), Emoji(cat_pixels)]
     while True:
