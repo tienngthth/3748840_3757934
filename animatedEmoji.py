@@ -176,7 +176,7 @@ class Emoji:
             sense.set_pixels(self.images[count % 4])
             sleep(0.3)
             count += 1
-
+            
 def main():
     sense.low_light = True
     emojis = [Emoji(rainbow_mouth_pixels), Emoji(sword_pixels), Emoji(cat_pixels)]
