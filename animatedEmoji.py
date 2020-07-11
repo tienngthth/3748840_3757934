@@ -175,8 +175,10 @@ class Emoji:
             sleep(0.3)
             count += 1
     
-emojis = [Emoji(rainbow_mouth_pixels), Emoji(eyes_mouth_pixels), Emoji(cat_pixels)]
+def main():
+    emojis = [Emoji(rainbow_mouth_pixels), Emoji(eyes_mouth_pixels), Emoji(cat_pixels)]
+    while True:
+        for emoji in emojis:
+            emoji.display()
 
-while True:
-    for emoji in emojis:
-        emoji.display()
+main()
