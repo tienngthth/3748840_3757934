@@ -2,6 +2,7 @@ from sense_hat import SenseHat
 from time import sleep
 
 sense = SenseHat()
+sense.low_light = True
 
 # Define some colors
 whi = (255, 255, 255)
@@ -9,13 +10,15 @@ bla = (0, 0, 0)
 red = (255, 0, 0)
 ora = (255, 165, 0)
 yel = (255, 255, 0)
-gre = (0, 255, 0)
-blu = (0, 0, 255)
+gre = (0, 77, 0)
+blu = (102, 153, 255)
 vio = (238, 130, 238)
 pur = (255, 51, 255)
-bro = (165, 42, 42)
+bro = (102, 102, 51)
 dpu = (102, 0, 102)
 cre = (255, 255, 153)
+gol = (255, 232, 102)
+gra = (102, 51, 0)
 
 rainbow_mouth_pixels_1 = [
     bla, yel, yel, yel, yel, yel, yel, bla,
@@ -66,53 +69,53 @@ rainbow_mouth_pixels = (
   rainbow_mouth_pixels_3, rainbow_mouth_pixels_4
 )
 
-eyes_mouth_pixels_1 = [
-    bla, bla, blu, blu, blu, blu, bla, bla,
-    bla, blu, blu, blu, blu, blu, blu, bla,
-    red, whi, whi, whi, whi, whi, whi, red,
-    red, whi, pur, whi, whi, pur, whi, red,
-    red, whi, whi, whi, whi, whi, whi, red,
-    bla, blu, blu, blu, blu, blu, blu, bla,
-    bla, bla, blu, blu, blu, blu, bla, bla,
-    bla, bla, bla, blu, blu, bla, bla, bla,
+sword_pixels_1 = [
+    bla, gre, gre, gre, gre, bla, blu, bla,
+    bla, gre, gre, gre, gre, bla, blu, bla,
+    bla, gol, dpu, gol, dpu, bla, blu, bla,
+    bla, gol, gol, gol, gol, bla, blu, bla,
+    bro, bro, gra, gra, gra, blu, blu, blu,
+    bro, bro, gra, gra, gra, gol, gol, bla,
+    bro, bro, gra, gra, gra, bla, blu, bla,
+    bla, dpu, bla, bla, dpu, bla, bla, bla,
 ]
 
-eyes_mouth_pixels_2 = [
-    bla, bla, blu, blu, blu, blu, bla, bla,
-    bla, blu, blu, blu, blu, blu, blu, bla,
-    red, whi, whi, whi, whi, whi, whi, red,
-    red, pur, whi, whi, pur, whi, whi, red,
-    red, whi, whi, whi, whi, whi, whi, red,
-    bla, blu, blu, blu, blu, blu, blu, bla,
-    bla, bla, blu, whi, whi, blu, bla, bla,
-    bla, bla, bla, blu, blu, bla, bla, bla,
+sword_pixels_2 = [
+    bla, gre, gre, gre, gre, bla, blu, bla,
+    bla, gre, gre, gre, gre, bla, blu, bla,
+    bla, gol, dpu, gol, dpu, bla, blu, bla,
+    bla, gol, gol, gol, gol, blu, blu, blu,
+    bro, bro, gra, gra, gra, bla, gol, bla,
+    bro, bro, gra, gra, gra, gol, blu, bla,
+    bro, bro, gra, gra, gra, bla, bla, bla,
+    bla, dpu, bla, bla, dpu, bla, bla, bla,
 ]
 
-eyes_mouth_pixels_3 = [
-    bla, bla, blu, blu, blu, blu, bla, bla,
-    bla, blu, blu, blu, blu, blu, blu, bla,
-    red, whi, whi, whi, whi, whi, whi, red,
-    red, whi, pur, whi, whi, pur, whi, red,
-    red, whi, whi, whi, whi, whi, whi, red,
-    bla, blu, blu, blu, blu, blu, blu, bla,
-    bla, bla, blu, whi, whi, blu, bla, bla,
-    bla, bla, bla, blu, blu, bla, bla, bla,
+sword_pixels_3 = [
+    bla, gre, gre, gre, gre, bla, blu, bla,
+    bla, gre, gre, gre, gre, bla, blu, bla,
+    bla, gol, dpu, gol, dpu, bla, blu, bla,
+    bla, gol, gol, gol, gol, bla, blu, bla,
+    bro, bro, gra, gra, gra, blu, blu, blu,
+    bro, bro, gra, gra, gra, gol, gol, bla,
+    bro, bro, gra, gra, gra, bla, blu, bla,
+    bla, dpu, bla, bla, dpu, bla, bla, bla,
 ]
 
-eyes_mouth_pixels_4 = [
-    bla, bla, blu, blu, blu, blu, bla, bla,
-    bla, blu, blu, blu, blu, blu, blu, bla,
-    red, whi, whi, whi, whi, whi, whi, red,
-    red, whi, whi, pur, whi, whi, pur, red,
-    red, whi, whi, whi, whi, whi, whi, red,
-    bla, blu, blu, blu, blu, blu, blu, bla,
-    bla, bla, blu, whi, whi, blu, bla, bla,
-    bla, bla, bla, blu, blu, bla, bla, bla,
+sword_pixels_4 = [
+    bla, gre, gre, gre, gre, bla, blu, bla,
+    bla, gre, gre, gre, gre, bla, blu, bla,
+    bla, gol, dpu, gol, dpu, bla, blu, bla,
+    bla, gol, gol, gol, gol, blu, blu, blu,
+    bro, bro, gra, gra, gra, bla, gol, bla,
+    bro, bro, gra, gra, gra, gol, blu, bla,
+    bro, bro, gra, gra, gra, bla, bla, bla,
+    bla, dpu, bla, bla, dpu, bla, bla, bla,
 ]
 
-eyes_mouth_pixels = (
-  eyes_mouth_pixels_1, eyes_mouth_pixels_2, 
-  eyes_mouth_pixels_3, eyes_mouth_pixels_4
+sword_pixels = (
+  sword_pixels_1, sword_pixels_2, 
+  sword_pixels_3, sword_pixels_4
 )
 
 cat_pixels_1 = [
@@ -175,7 +178,7 @@ class Emoji:
             sleep(0.3)
             count += 1
     
-emojis = [Emoji(rainbow_mouth_pixels), Emoji(eyes_mouth_pixels), Emoji(cat_pixels)]
+emojis = [Emoji(rainbow_mouth_pixels), Emoji(sword_pixels), Emoji(cat_pixels)]
 
 while True:
     for emoji in emojis:
