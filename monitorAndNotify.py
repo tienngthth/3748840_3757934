@@ -1,6 +1,6 @@
-# import sqlite3
+import sqlite3
 import json
-# import requests
+import requests
 import datetime
 from sense_hat import SenseHat
 from time import sleep
@@ -10,8 +10,8 @@ dbname = "AA"
 ACCESS_TOKEN=""
 comfortable_status = True
 cold_max = "0"
-comfortable_min = "15"
-comfortable_max = "25"
+comfortable_min = "0"
+comfortable_max = "50"
 hot_min = "50"
 
 class Context:
@@ -34,11 +34,14 @@ class Context:
 def read_config():
     try:
         config_file = open("config.json")
-        parse_json(json.load(config_file))
+        parse_json(json.load(config_file)) 
+        return True
     except:
         print("missing config file")
+        return False
 
 def parse_json(config_json):
+    global cold_max, hot_min, comfortable_max, comfortable_min
     cold_max = config_json["cold_max"]
     comfortable_min = config_json["comfortable_min"]
     comfortable_max = config_json["comfortable_max"]
@@ -51,37 +54,39 @@ def get_context_sense_hat():
     sense.clear()
     humidity = sense.get_humidity()
     context = Context(temp, humidity)
+    print(context.temp)
+    print(context.humidity)
 
-def check_context():
-    global comfortable_status
-    body = "Good"
-    if context.temp > float(comfortable_max):
-        body = "Temperature is too hot: {} celcius"
-    elif context.temp < float(comfortable_min):
-        body = "Temperature is too cold: {} celcius "
-    if body != "Good" and comfortable_status == True:
-        body = body.format(context.temp)
-        # send_notification_via_pushbullet("From Raspberry Pi", body)
-        comfortable_status = False
+# def check_context():
+    # global comfortable_status
+    # body = "Good"
+    # if context.temp > float(comfortable_max):
+    #     body = "Temperature is too hot: {} celcius"
+    # elif context.temp < float(comfortable_min):
+    #     body = "Temperature is too cold: {} celcius "
+    # if body != "Good" and comfortable_status == True:
+    #     body = body.format(context.temp)
+    #     send_notification_via_pushbullet("From Raspberry Pi", body)
+    #     comfortable_status = False
 
 # def send_notification_via_pushbullet(title, body):
-#     data_send = {"type": "note", "title": title, "body": body} 
-#     resp = requests.post('https://api.pushbullet.com/v2/pushes', data=json.dumps(data_send),
-#                         headers={'Authorization': 'Bearer ' + ACCESS_TOKEN, 
-#                         'Content-Type': 'application/json'})
-#     if resp.status_code != 200:
-#         raise Exception('something wrong')
-#     else:
-#         print('complete sending')
+    # data_send = {"type": "note", "title": title, "body": body} 
+    # resp = requests.post('https://api.pushbullet.com/v2/pushes', data=json.dumps(data_send),
+    #                     headers={'Authorization': 'Bearer ' + ACCESS_TOKEN, 
+    #                     'Content-Type': 'application/json'})
+    # if resp.status_code != 200:
+    #     raise Exception('something wrong')
+    # else:
+    #     print('complete sending')
 
 def main():
     global comfortable_status
-    while True:
-        read_config()
-        get_context_sense_hat()
-        check_context()
-        if (datetime.datetime.now().strftime("%H") == "00"):
-            comfortable_status = True
-        sleep(60)
+    if read_config():
+        while True:        
+            get_context_sense_hat()
+            # check_context()
+            # if (datetime.datetime.now().strftime("%H") == "00"):
+            #     comfortable_status = True
+            # sleep(60)
         
 main()
