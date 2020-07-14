@@ -61,6 +61,12 @@ def get_preference(config_json, status_json):
         status_json["new_tb"]
     )
 
+def get_context_sense_hat():
+    global context
+    context = Context(sense.get_temperature(), sense.get_humidity())
+    check_tb()
+    log_data_to_db(context)
+
 def check_tb():
     try:
         if preference.new_tb == "True":
@@ -71,12 +77,6 @@ def check_tb():
     except:
         send_notification_via_pushbullet("From Raspberry Pi", "Fail to create database table")
         sys.exit()
-
-def get_context_sense_hat():
-    global context
-    context = Context(sense.get_temperature(), sense.get_humidity())
-    check_tb()
-    log_data_to_db(context)
 
 def log_data_to_db(context):
     conn = sqlite3.connect(dbname)

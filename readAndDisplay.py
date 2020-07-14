@@ -4,3 +4,24 @@
 2.	If the level of temperature is comfortable, display temperature with green colour.
 3.	If the level of temperature is hot, display temperature with red colour.
 """
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import sqlite3
+import json
+import requests
+import datetime
+import sys
+import pathlib
+from sense_hat import SenseHat
+from time import sleep
+
+def display_db():
+    conn = sqlite3.connect("sensehat.db")
+    curs = conn.cursor()
+    print ("\nEntire database contents:\n") 
+    row = curs.execute("SELECT * FROM SenseHat_data ORDER BY ID DESC LIMIT 1")
+    print (row)
+    conn.close()
+
+def main():
+    display_db
