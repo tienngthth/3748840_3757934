@@ -21,10 +21,8 @@ class Preference:
     
     def check_comfortable(self, temp):
         if temp > self.comfortable_max:
-            self.set_comfortable_status(False)
             return "hot"
         elif temp < self.comfortable_min:
-            self.set_comfortable_status(False)
             return "cold"
         else: 
             return "good"
@@ -89,6 +87,7 @@ def check_context():
     if status != "good" and preference.comfortable_status == True:
         body = "Temperature is too {}: {} celcius".format(status, context.temp)
         send_notification_via_pushbullet("From Raspberry Pi", body)
+        preference.set_comfortable_status(False)
 
 def send_notification_via_pushbullet(title, body):
     data_send = {"type": "note", "title": title, "body": body} 
@@ -109,7 +108,7 @@ def main():
     while True:        
         get_context_sense_hat()
         check_context()
-        if (datetime.datetime.now().strftime("%H") == "00"):
+        if (datetime.datetime.now().strftime("%H:%M") == "00:00"):
             preference.set_comfortable_status(True)
         sleep(60)
         
