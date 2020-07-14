@@ -1,8 +1,11 @@
-import sqlite3 
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import sqlite3
 import json
 import requests
 import datetime
 import sys
+import pathlib
 from sense_hat import SenseHat
 from time import sleep
 
@@ -13,17 +16,17 @@ dbname = "sensehat.db"
 class Preference:
     def __init__(self, cold_max, comfortable_min, comfortable_max, hot_min, comfortable_status):
         self.cold_max = cold_max
-        self.comfortable_min = comfortable_min                
+        self.comfortable_min = comfortable_min
         self.comfortable_max = comfortable_max
         self.hot_min = hot_min
         self.comfortable_status = comfortable_status
-    
+
     def check_comfortable(self, temp):
         if temp > self.comfortable_max:
             return "hot"
         elif temp < self.comfortable_min:
             return "cold"
-        else: 
+        else:
             return "good"
 
     def set_comfortable_status(self, status):
@@ -32,15 +35,18 @@ class Preference:
 class Context:
     def __init__(self, temp, humidity):
         self.time = datetime.datetime.now()
-        self.temp = round(temp, 2)                
-        self.humidity = round(humidity, 2)    
+        self.temp = round(temp, 2)
+        self.humidity = round(humidity, 2)
 
 def read_files():
+
     try:
-        config_json = json.load(open("config.json"))
-        status_json = json.load(open("status.json"))
-        get_preference(config_json, status_json) 
-        check_db(status_json)
+        config_file = open(pathlib.Path(__file__).parent / "config.json")
+        config_json = json.load(config_file)
+        status_file = open(pathlib.Path(__file__).parent / "status.json")
+        status_json = json.load(status_file)
+        get_preference(config_json, status_json)
+        check_tb(status_json)
     except:
         send_notification_via_pushbullet("From Raspberry Pi", "Fail to read files")
         sys.exit()
@@ -55,32 +61,29 @@ def get_preference(config_json, status_json):
         status_json["comfortable_status"]
     )
 
-def check_db(status_json):
-    if status_json["new_tb"] == "True":
-        create_tb()
-    
-def create_tb():
+def check_tb(status_json):
     try:
-        con = sqlite3.connect(dbname)
-        cur = con.cursor() 
-        cur.execute("DROP TABLE IF EXISTS SENSEHAT_data")
-        cur.execute("CREATE TABLE SENSEHAT_data(timestamp DATETIME, temp NUMERIC, humidity NUMERIC)")
+        if status_json["new_tb"] == "True":
+            con = sqlite3.connect("sensehat.db")
+            cur = con.cursor()
+            cur.execute("DROP TABLE IF EXISTS SENSEHAT_data")
+            cur.execute("CREATE TABLE SENSEHAT_data(timestamp DATETIME, temp NUMERIC, humidity NUMERIC)")
     except:
         send_notification_via_pushbullet("From Raspberry Pi", "Fail to create database table")
         sys.exit()
 
-def get_context_sense_hat():    
+def get_context_sense_hat():
     global context
     context = Context(sense.get_temperature(), sense.get_humidity())
     log_data_to_db(context)
 
-def log_data_to_db(context): 
+def log_data_to_db(context):
     conn = sqlite3.connect(dbname)
     curs = conn.cursor()
     curs.execute(
-        "INSERT INTO SENSEHAT_data values((?), (?), (?))", 
+        "INSERT INTO SENSEHAT_data values((?), (?), (?))",
         (context.time, context.temp, context.humidity)
-    ) 
+    )
     conn.commit()
     conn.close()
     display_db()
@@ -91,7 +94,7 @@ def display_db():
     print ("\nEntire database contents:\n")
     for row in curs.execute("SELECT * FROM SenseHat_data"):
         print (row)
-    conn.close()  
+    conn.close()
 
 def check_context():
     status = preference.check_comfortable(context.temp)
@@ -101,11 +104,11 @@ def check_context():
         save_status("False", "False")
 
 def send_notification_via_pushbullet(title, body):
-    data_send = {"type": "note", "title": title, "body": body} 
+    data_send = {"type": "note", "title": title, "body": body}
     resp = requests.post(
-        'https://api.pushbullet.com/v2/pushes', 
+        'https://api.pushbullet.com/v2/pushes',
         data=json.dumps(data_send),
-        headers={'Authorization': 'Bearer ' + token, 
+        headers={'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json'}
     )
     if resp.status_code != 200:
@@ -114,20 +117,22 @@ def send_notification_via_pushbullet(title, body):
         print('complete sending')
 
 def save_status(comfortable_status, new_tb):
-    status_file = open("status.txt", "w")
+    status_file = open(pathlib.Path(__file__).parent / "status.json", "w")
     status_file.write(json.dumps({
             "comfortable_status" : comfortable_status,
             "new_tb" : new_tb
         }))
     status_file.close()
 
+def reset_status():
+    if (datetime.datetime.now().strftime("%H:%M") == "17:18"):
+        save_status("True", "False")
+
 def main():
+    sense.show_message("hi")
+    reset_status()
     read_files()
-    while True:        
-        get_context_sense_hat()
-        check_context()
-        if (datetime.datetime.now().strftime("%H:%M") == "00:00"):
-            save_status("True", "False")
-        sleep(60)
-        
+    get_context_sense_hat()
+    check_context()
+
 main()
