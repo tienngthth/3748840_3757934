@@ -11,12 +11,12 @@ token = "o.FrPitNnEo4UJXz941zfjmUKNxKv9bGQj"
 dbname = "sensehat.db"
 
 class Preference:
-    def __init__(self, cold_max, comfortable_min, comfortable_max, hot_min):
+    def __init__(self, cold_max, comfortable_min, comfortable_max, hot_min, comfortable_status):
         self.cold_max = cold_max
         self.comfortable_min = comfortable_min                
         self.comfortable_max = comfortable_max
         self.hot_min = hot_min
-        self.comfortable_status = True
+        self.comfortable_status = comfortable_status
     
     def check_comfortable(self, temp):
         if temp > self.comfortable_max:
@@ -34,8 +34,32 @@ class Context:
         self.time = datetime.datetime.now()
         self.temp = round(temp, 2)                
         self.humidity = round(humidity, 2)    
+
+def read_files():
+    try:
+        config_json = json.load(open("config.json"))
+        status_json = json.load(open("status.json"))
+        get_preference(config_json, status_json) 
+        check_db(status_json)
+    except:
+        send_notification_via_pushbullet("From Raspberry Pi", "Fail to read files")
+        sys.exit()
+
+def get_preference(config_json, status_json):
+    global preference
+    preference = Preference (
+        float(config_json["cold_max"]),
+        float(config_json["comfortable_min"]),
+        float(config_json["comfortable_max"]),
+        float(config_json["hot_min"]),
+        status_json["comfortable_status"]
+    )
+
+def check_db(status_json):
+    if status_json["new_tb"] == "True":
+        create_tb()
     
-def create_db():
+def create_tb():
     try:
         con = sqlite3.connect(dbname)
         cur = con.cursor() 
@@ -45,40 +69,14 @@ def create_db():
         send_notification_via_pushbullet("From Raspberry Pi", "Fail to create database table")
         sys.exit()
 
-def read_file():
-    try:
-        read_config()
-        read_status()
-    except:
-        send_notification_via_pushbullet("From Raspberry Pi", "Fail to read files")
-        sys.exit()
-
-def read_config():
-    config_file = open("config.json")
-    parse_json(json.load(config_file)) 
-
-def parse_json(config_json):
-    global preference
-    preference = Preference (
-        float(config_json["cold_max"]),
-        float(config_json["comfortable_min"]),
-        float(config_json["comfortable_max"]),
-        float(config_json["hot_min"])
-    )
-        
-def read_status():
-    status_file = open("status.txt", "r")
-    preference.set_comfortable_status(status_file.read())
-    status_file.close()
-
 def get_context_sense_hat():    
     global context
     context = Context(sense.get_temperature(), sense.get_humidity())
     log_data_to_db(context)
 
 def log_data_to_db(context): 
-    conn=sqlite3.connect(dbname)
-    curs=conn.cursor()
+    conn = sqlite3.connect(dbname)
+    curs = conn.cursor()
     curs.execute(
         "INSERT INTO SENSEHAT_data values((?), (?), (?))", 
         (context.time, context.temp, context.humidity)
@@ -100,7 +98,7 @@ def check_context():
     if status != "good" and preference.comfortable_status == "True":
         body = "Temperature is too {}: {} celcius".format(status, context.temp)
         send_notification_via_pushbullet("From Raspberry Pi", body)
-        save_status("False")
+        save_status("False", "False")
 
 def send_notification_via_pushbullet(title, body):
     data_send = {"type": "note", "title": title, "body": body} 
@@ -115,19 +113,21 @@ def send_notification_via_pushbullet(title, body):
     else:
         print('complete sending')
 
-def save_status(status):
+def save_status(comfortable_status, new_tb):
     status_file = open("status.txt", "w")
-    status_file.write(status)
+    status_file.write(json.dumps({
+            "comfortable_status" : comfortable_status,
+            "new_tb" : new_tb
+        }))
     status_file.close()
 
 def main():
-    create_db()
-    read_config()
+    read_files()
     while True:        
         get_context_sense_hat()
         check_context()
         if (datetime.datetime.now().strftime("%H:%M") == "00:00"):
-            save_status("True")
+            save_status("True", "False")
         sleep(60)
         
 main()
