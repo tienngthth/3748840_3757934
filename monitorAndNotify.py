@@ -7,10 +7,9 @@ from sense_hat import SenseHat
 from time import sleep
 
 sense = SenseHat()
+token = "o.FrPitNnEo4UJXz941zfjmUKNxKv9bGQj"
 dbname = "sensehat.db"
-token ="o.FrPitNnEo4UJXz941zfjmUKNxKv9bGQj"
-con = sqlite3.connect('sensehat.db')
-    
+
 class Preference:
     def __init__(self, cold_max, comfortable_min, comfortable_max, hot_min):
         self.cold_max = cold_max
@@ -37,33 +36,47 @@ class Context:
         self.humidity = round(humidity, 2)    
     
 def create_db():
-    with con: 
+    try:
+        con = sqlite3.connect(dbname)
         cur = con.cursor() 
         cur.execute("DROP TABLE IF EXISTS SENSEHAT_data")
         cur.execute("CREATE TABLE SENSEHAT_data(timestamp DATETIME, temp NUMERIC, humidity NUMERIC)")
-
-def read_config():
-    try:
-        config_file = open("config.json")
-        parse_json(json.load(config_file)) 
     except:
-        send_notification_via_pushbullet("From Raspberry Pi", "Config file error")
+        send_notification_via_pushbullet("From Raspberry Pi", "Fail to create database table")
         sys.exit()
 
+def read_file():
+    try:
+        read_config()
+        read_status()
+    except:
+        send_notification_via_pushbullet("From Raspberry Pi", "Fail to read files")
+        sys.exit()
+
+def read_config():
+    config_file = open("config.json")
+    parse_json(json.load(config_file)) 
+
 def parse_json(config_json):
-    cold_max = float(config_json["cold_max"])
-    comfortable_min = float(config_json["comfortable_min"])
-    comfortable_max = float(config_json["comfortable_max"])
-    hot_min = float(config_json["hot_min"])
     global preference
-    preference = Preference (cold_max, comfortable_min, comfortable_max, hot_min)
-         
+    preference = Preference (
+        float(config_json["cold_max"]),
+        float(config_json["comfortable_min"]),
+        float(config_json["comfortable_max"]),
+        float(config_json["hot_min"])
+    )
+        
+def read_status():
+    status_file = open("status.txt", "r")
+    preference.set_comfortable_status(status_file.read())
+    status_file.close()
+
 def get_context_sense_hat():    
     global context
     context = Context(sense.get_temperature(), sense.get_humidity())
     log_data_to_db(context)
 
-def log_data_to_db(context):    
+def log_data_to_db(context): 
     conn=sqlite3.connect(dbname)
     curs=conn.cursor()
     curs.execute(
@@ -84,10 +97,10 @@ def display_db():
 
 def check_context():
     status = preference.check_comfortable(context.temp)
-    if status != "good" and preference.comfortable_status == True:
+    if status != "good" and preference.comfortable_status == "True":
         body = "Temperature is too {}: {} celcius".format(status, context.temp)
         send_notification_via_pushbullet("From Raspberry Pi", body)
-        preference.set_comfortable_status(False)
+        save_status("False")
 
 def send_notification_via_pushbullet(title, body):
     data_send = {"type": "note", "title": title, "body": body} 
@@ -102,6 +115,11 @@ def send_notification_via_pushbullet(title, body):
     else:
         print('complete sending')
 
+def save_status(status):
+    status_file = open("status.txt", "w")
+    status_file.write(status)
+    status_file.close()
+
 def main():
     create_db()
     read_config()
@@ -109,7 +127,7 @@ def main():
         get_context_sense_hat()
         check_context()
         if (datetime.datetime.now().strftime("%H:%M") == "00:00"):
-            preference.set_comfortable_status(True)
+            save_status("True")
         sleep(60)
         
 main()
