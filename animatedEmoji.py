@@ -1,21 +1,5 @@
-from sense_hat import SenseHat
-from time import sleep
-
-sense = SenseHat()
-
-# Define some colors
-whi = (255, 255, 255)
-bla = (0, 0, 0)
-red = (255, 0, 0)
-ora = (255, 165, 0)
-yel = (255, 255, 0)
-gre = (0, 255, 0)
-blu = (0, 0, 255)
-vio = (238, 130, 238)
-pur = (255, 51, 255)
-bro = (165, 42, 42)
-dpu = (102, 0, 102)
-cre = (255, 255, 153)
+from ultility import bla, yel, whi, gre, blu, vio, ora, dpu, pur, red, cre
+from model.emoji import Emoji
 
 rainbow_mouth_pixels_1 = [
     bla, yel, yel, yel, yel, yel, yel, bla,
@@ -163,17 +147,6 @@ cat_pixels = (
     cat_pixels_1, cat_pixels_2, 
     cat_pixels_3, cat_pixels_4
 )
-
-class Emoji:
-    def __init__(self, images):
-        self.images = images
-    
-    def display(self):
-        count = 0
-        while count < 10:
-            sense.set_pixels(self.images[count % 4])
-            sleep(0.3)
-            count += 1
     
 def main():
     emojis = [Emoji(rainbow_mouth_pixels), Emoji(eyes_mouth_pixels), Emoji(cat_pixels)]

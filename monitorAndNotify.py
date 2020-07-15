@@ -6,38 +6,14 @@ import requests
 import datetime
 import sys
 import pathlib
+from model.preference import Preference
+from model.context import Context
 from sense_hat import SenseHat
 from time import sleep
 
 sense = SenseHat()
 token = "o.FrPitNnEo4UJXz941zfjmUKNxKv9bGQj"
 dbname = "sensehat.db"
-
-class Preference:
-    def __init__(self, cold_max, comfortable_min, comfortable_max, hot_min, comfortable_status, new_tb):
-        self.cold_max = cold_max
-        self.comfortable_min = comfortable_min
-        self.comfortable_max = comfortable_max
-        self.hot_min = hot_min
-        self.comfortable_status = comfortable_status
-        self.new_tb = new_tb
-
-    def check_comfortable(self, temp):
-        if temp > self.comfortable_max:
-            return "hot"
-        elif temp < self.comfortable_min:
-            return "cold"
-        else:
-            return "good"
-
-    def set_comfortable_status(self, status):
-        self.comfortable_status = status
-
-class Context:
-    def __init__(self, temp, humidity):
-        self.time = datetime.datetime.now()
-        self.temp = round(temp, 2)
-        self.humidity = round(humidity, 2)
 
 def read_files():
     try:
@@ -51,21 +27,19 @@ def read_files():
         sys.exit()
 
 def get_preference(config_json, status_json):
-    global preference
-    preference = Preference (
+    Preference.set_preference (
         float(config_json["cold_max"]),
         float(config_json["comfortable_min"]),
         float(config_json["comfortable_max"]),
         float(config_json["hot_min"]),
         status_json["comfortable_status"],
-        status_json["new_tb"]
+        status_json["create_new_table"]
     )
 
 def get_context_sense_hat():
-    global context
-    context = Context(sense.get_temperature(), sense.get_humidity())
+    Context.set_context(sense.get_temperature(), sense.get_humidity())
     check_tb()
-    log_data_to_db(context)
+    log_data_to_db()
 
 def check_tb():
     try:
@@ -78,12 +52,12 @@ def check_tb():
         send_notification_via_pushbullet("From Raspberry Pi", "Fail to create database table")
         sys.exit()
 
-def log_data_to_db(context):
+def log_data_to_db():
     conn = sqlite3.connect(dbname)
     curs = conn.cursor()
     curs.execute(
         "INSERT INTO SENSEHAT_data values((?), (?), (?))",
-        (context.time, context.temp, context.humidity)
+        (Context.time, Context.temp, Context.humidity)
     )
     conn.commit()
     conn.close()
@@ -98,9 +72,9 @@ def display_db():
     conn.close()
 
 def check_context():
-    status = preference.check_comfortable(context.temp)
-    if status != "good" and preference.comfortable_status == "True":
-        body = "Temperature is too {}: {} celcius".format(status, context.temp)
+    status = Preference.check_comfortable(Context.temp)
+    if status != "good" and Preference.comfortable_status == "True":
+        body = "Temperature is too {}: {} celcius".format(status, Context.temp)
         send_notification_via_pushbullet("From Raspberry Pi", body)
         save_status("False", "False")
 
