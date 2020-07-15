@@ -6,6 +6,6 @@ class Context:
     
     @staticmethod
     def set_context(context):
-        Context.time = datetime.datetime.now().strftime("%X")
+        Context.time = datetime.datetime.now().replace(microsecond=0)
         Context.temp = round(context[0], 2)
         Context.humidity = round(context[1], 2)

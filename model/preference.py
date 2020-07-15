@@ -1,6 +1,6 @@
 import sys
-from pushBullet import PushBullet
-from fileHandle import File
+from .pushBullet import PushBullet
+from .fileHandle import File
 
 class Preference:
     cold_max = None

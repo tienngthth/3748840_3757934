@@ -1,5 +1,5 @@
-from model.senseHAT import SenseHAT, bla, yel, whi, gre, blu, vio
-from model.senseHAT import ora, dpu, pur, red, cre, bro, gol, gra
+from model.senseHat import SenseHat, bla, yel, whi, gre, blu, vio
+from model.senseHat import ora, dpu, pur, red, cre, bro, gol, gra
 from model.emoji import Emoji
 
 rainbow_mouth_pixels_1 = [
@@ -150,12 +150,12 @@ cat_pixels = (
 )
     
 def main():
-    emojis = [Emoji(rainbow_mouth_pixels), Emoji(sword_pixels_2), Emoji(cat_pixels)]
+    emojis = [Emoji(rainbow_mouth_pixels), Emoji(sword_pixels), Emoji(cat_pixels)]
     stop = False
     while not stop:
         for emoji in emojis:
             emoji.display()
-        if (SenseHAT.detect_stick == True):
+        if (SenseHat.detect_stick()):
             stop = True
             
 main()

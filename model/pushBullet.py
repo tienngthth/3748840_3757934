@@ -10,7 +10,7 @@ class PushBullet:
         resp = requests.post(
             'https://api.pushbullet.com/v2/pushes',
             data = json.dumps(data_send),
-            headers={'Authorization': 'Bearer ' + token,
+            headers={'Authorization': 'Bearer ' + PushBullet.token,
             'Content-Type': 'application/json'}
         )
         if resp.status_code != 200:
