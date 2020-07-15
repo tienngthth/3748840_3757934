@@ -1,23 +1,6 @@
-from sense_hat import SenseHat
-from time import sleep
-
-sense = SenseHat()
-
-# Define some colors
-whi = (255, 255, 255)
-bla = (0, 0, 0)
-red = (255, 0, 0)
-ora = (255, 165, 0)
-yel = (255, 255, 0)
-gre = (0, 77, 0)
-blu = (102, 153, 255)
-vio = (238, 130, 238)
-pur = (255, 51, 255)
-bro = (102, 102, 51)
-dpu = (102, 0, 102)
-cre = (255, 255, 153)
-gol = (255, 232, 102)
-gra = (102, 51, 0)
+from model.senseHAT import SenseHAT, bla, yel, whi, gre, blu, vio
+from model.senseHAT import ora, dpu, pur, red, cre, bro, gol, gra
+from model.emoji import Emoji
 
 rainbow_mouth_pixels_1 = [
     bla, yel, yel, yel, yel, yel, yel, bla,
@@ -165,23 +148,14 @@ cat_pixels = (
     cat_pixels_1, cat_pixels_2, 
     cat_pixels_3, cat_pixels_4
 )
-
-class Emoji:
-    def __init__(self, images):
-        self.images = images
     
-    def display(self):
-        count = 0
-        while count < 10:
-            sense.set_pixels(self.images[count % 4])
-            sleep(0.3)
-            count += 1
-
 def main():
-    sense.low_light = True
-    emojis = [Emoji(rainbow_mouth_pixels), Emoji(sword_pixels), Emoji(cat_pixels)]
-    while True:
+    emojis = [Emoji(rainbow_mouth_pixels), Emoji(sword_pixels_2), Emoji(cat_pixels)]
+    stop = False
+    while not stop:
         for emoji in emojis:
             emoji.display()
-
+        if (SenseHAT.detect_stick == True):
+            stop = True
+            
 main()

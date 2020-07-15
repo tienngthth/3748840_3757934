@@ -1,0 +1,6 @@
+{
+    "humidity_min_temp": 10,
+    "humidity_max_temp": 10,
+    "comfortable_temp_min": 10,
+    "comfortable_temp_max": 25
+}
