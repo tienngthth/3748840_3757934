@@ -1,4 +1,4 @@
-from model.senseHat import SenseHat, bla, yel, whi, gre, blu, vio
+from model.senseHat import PiSenseHat, bla, yel, whi, gre, blu, vio
 from model.senseHat import ora, dpu, pur, red, cre, bro, gol, gra
 from model.emoji import Emoji
 
@@ -155,7 +155,7 @@ def main():
     while not stop:
         for emoji in emojis:
             emoji.display()
-        if (SenseHat.detect_stick()):
+        if (PiSenseHat.detect_stick()):
             stop = True
             
 main()

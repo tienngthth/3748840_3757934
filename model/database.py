@@ -8,10 +8,10 @@ class Database:
         conn = sqlite3.connect("sensehat.db")
         curs = conn.cursor()
         rows = curs.execute("SELECT " 
-                                    + columns 
-                                    + " FROM "
-                                    + tb_name
-                                    + extra)
+                            + columns 
+                            + " FROM "
+                            + tb_name
+                            + extra)
         for row in rows:
             return_value = row
         conn.close()

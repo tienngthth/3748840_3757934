@@ -17,37 +17,37 @@ cre = (255, 255, 153)
 gol = (255, 232, 102)
 gra = (102, 51, 0)
 
-class SenseHat:
+class PiSenseHat:
     sense = SenseHat()
     sense.low_light = True
     
     @staticmethod
     def display_image_duration(image, time):
-        SenseHat.sense.clear()
-        SenseHat.sense.set_pixels(image)
+        PiSenseHat.sense.clear()
+        PiSenseHat.sense.set_pixels(image)
         sleep(time)
 
     @staticmethod
     def get_data():
-        temp = SenseHat.sense.get_temperature()
-        humidity = SenseHat.sense.get_humidity()
+        temp = PiSenseHat.sense.get_temperature()
+        humidity = PiSenseHat.sense.get_humidity()
         return (temp, humidity)
 
     @staticmethod
     def show_message(message, colour = whi):
-        SenseHat.sense.clear()
-        SenseHat.sense.show_message(message, text_colour = colour)
+        PiSenseHat.sense.clear()
+        PiSenseHat.sense.show_message(message, text_colour = colour)
         
     @staticmethod
     def show_letter(letter, colour = whi):
-        SenseHat.sense.clear()
-        SenseHat.sense.show_letter(letter, colour)
+        PiSenseHat.sense.clear()
+        PiSenseHat.sense.show_letter(letter, colour)
 
     @staticmethod
     def detect_stick():
-        for event in SenseHat.sense.stick.get_events():
+        for event in PiSenseHat.sense.stick.get_events():
             if event.action == "pressed":
-                SenseHat.sense.clear()
+                #PiSenseHat.sense.clear()
                 return True
         return False
 

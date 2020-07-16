@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from time import time
-from model.senseHat import SenseHat, blu, gre, red, whi
+from model.senseHat import PiSenseHat, blu, gre, red, whi
 from model.preference import Preference
 from model.database import Database
 from monitorAndNotify import evaluate_context
@@ -13,11 +13,11 @@ def get_latest_temp():
 
 def set_sense_hat():
     if Preference.check_comfortable(temp) == "cold":
-        SenseHat.show_message(str(temp) + " Celsius", blu)
+        PiSenseHat.show_message(str(temp) + " Celsius", blu)
     elif Preference.check_comfortable(temp) == "hot":
-        SenseHat.show_message(str(temp) + " Celsius", red)
+        PiSenseHat.show_message(str(temp) + " Celsius", red)
     else:
-        SenseHat.show_message(str(temp) + " Celsius", gre)
+        PiSenseHat.show_message(str(temp) + " Celsius", gre)
 
 def main():
     evaluate_context()
@@ -26,8 +26,8 @@ def main():
     stop = False
     while time() < end and not stop:
         set_sense_hat()
-        if SenseHat.detect_stick():
+        if PiSenseHat.detect_stick():
             stop = True
-    SenseHat.show_letter("*")
+    PiSenseHat.show_letter("*")
 
 main()

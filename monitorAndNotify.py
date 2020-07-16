@@ -4,7 +4,7 @@ import datetime
 import sys
 from model.preference import Preference
 from model.context import Context
-from model.senseHat import SenseHat
+from model.senseHat import PiSenseHat
 from model.pushBullet import PushBullet
 from model.database import Database
 from model.fileHandle import File
@@ -15,7 +15,7 @@ def reset_status():
         save_status("True", Preference.create_new_table)
 
 def get_context_sense_hat():
-    Context.set_context(SenseHat.get_data()[0:2])
+    Context.set_context(PiSenseHat.get_data()[0:2])
     check_tb()
     log_data_to_db()
 
