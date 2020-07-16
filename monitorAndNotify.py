@@ -49,10 +49,8 @@ def save_status(comfortable_status, create_new_table):
     }
     File.write_json("status.json", json_content)
 
-def main():
+def evaluate_context():
     Preference.read_preference()
     reset_status()
     get_context_sense_hat()
     check_context()
-
-main()

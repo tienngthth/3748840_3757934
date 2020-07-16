@@ -1,30 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from time import time
-from model.senseHat import SenseHat, blu, gre, red
+from model.senseHat import SenseHat, blu, gre, red, whi
 from model.preference import Preference
 from model.database import Database
+from monitorAndNotify import evaluate_context
 
 def get_latest_temp():
     global temp
     row = Database.select_a_record("temp",  "SENSEHAT_data", " ORDER BY timestamp DESC LIMIT 1")
-    print(row)
     temp = row[0]
 
-def display_temp():
+def set_sense_hat():
     if Preference.check_comfortable(temp) == "cold":
-        SenseHat.show_message(str(temp) + " Celcius", blu)
+        SenseHat.show_message(str(temp) + " Celsius", blu)
     elif Preference.check_comfortable(temp) == "hot":
-        SenseHat.show_message(str(temp) + " Celcius", red)
+        SenseHat.show_message(str(temp) + " Celsius", red)
     else:
-        SenseHat.show_message(str(temp) + " Celcius", gre)
+        SenseHat.show_message(str(temp) + " Celsius", gre)
 
 def main():
-    Preference.read_preference()
-    Database.display_db()
+    evaluate_context()
     get_latest_temp()
-    end = time() + 60
-    while time() < end:
-        display_temp()
+    end = time() + 52
+    stop = False
+    while time() < end and not stop:
+        set_sense_hat()
+        if SenseHat.detect_stick():
+            stop = True
+    SenseHat.show_letter("*")
 
 main()

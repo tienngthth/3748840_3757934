@@ -34,9 +34,14 @@ class SenseHat:
         return (temp, humidity)
 
     @staticmethod
-    def show_message(message, color = whi):
+    def show_message(message, colour = whi):
         SenseHat.sense.clear()
-        SenseHat.sense.show_message(message, text_colour = color)
+        SenseHat.sense.show_message(message, text_colour = colour)
+        
+    @staticmethod
+    def show_letter(letter, colour = whi):
+        SenseHat.sense.clear()
+        SenseHat.sense.show_letter(letter, colour)
 
     @staticmethod
     def detect_stick():
