@@ -5,7 +5,8 @@ class PushBullet:
     token = "o.FrPitNnEo4UJXz941zfjmUKNxKv9bGQj"
     
     @staticmethod
-    def send_notification(title, body):
+    def send_notification(title, body, token = PushBullet.token):
+        PushBullet.token = token
         data_send = {"type": "note", "title": title, "body": body}
         resp = requests.post(
             'https://api.pushbullet.com/v2/pushes',
