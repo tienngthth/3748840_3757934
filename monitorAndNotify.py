@@ -4,10 +4,10 @@ import datetime
 import sys
 from model.preference import Preference
 from model.context import Context
-from model.senseHat import PiSenseHat
 from model.pushBullet import PushBullet
 from model.database import Database
 from model.fileHandle import File
+from createReport import record_data
 
 def read_preference():
     try:
@@ -20,8 +20,11 @@ def reset_status():
     if (datetime.datetime.now().strftime("%H:%M") == "00:00"):
         save_status("True", Preference.create_new_table)
 
+def save_last_record():
+    if (datetime.datetime.now().strftime("%H:%M") == "23:59"):
+        record_data()
+
 def get_context_sense_hat():
-    Context.set_context(PiSenseHat.get_data()[0:2])
     check_tb()
     Context.log_data_to_db("SENSEHAT_data", "((?), (?), (?))")
 
