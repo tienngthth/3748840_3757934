@@ -4,6 +4,18 @@ class Database:
     db_name = "sensehat.db"
 
     @staticmethod
+    def execute_equation(equation, tb_name, extra = "", db_name = Database.db_name):
+        Database.db_name = db_name
+        conn = sqlite3.connect(Database.db_name)
+        curs = conn.cursor()
+        value = curs.execute("SELECT " 
+                            + equation
+                            + " FROM "
+                            + tb_name
+                            + extra)
+        conn.close()
+        return value
+    @staticmethod
     def select_a_record(columns, tb_name, extra = "", db_name = Database.db_name):
         Database.db_name = db_name
         conn = sqlite3.connect(Database.db_name)

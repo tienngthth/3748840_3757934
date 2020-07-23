@@ -20,11 +20,33 @@ def reset_status():
     if (datetime.datetime.now().strftime("%H:%M") == "00:00"):
         save_status("True", Preference.create_new_table)
 
-def save_last_record():
+def report_last_record():
     if (datetime.datetime.now().strftime("%H:%M") == "23:59"):
         record_data()
+        if (Preference.comfortable_status == True):
+            noti_body = "Average temperature of the day: " + get_avg_temp()
+            noti_body += "\nAverage humidity of the day: " + get_avg_humidity()
+            noti_body += "\n See you tomorrow! Good night"
+            PushBullet.send_notification("From Raspberry Pi", noti_body)
+            
+def get_avg_temp():
+    value = Database.execute_equation(
+        "AVG(temp)",  
+        "SENSEHAT_data", 
+        "WHERE cast(timestamp as Date) = cast(getdate() as Date)"
+    )
+    return str(value)
+
+def get_avg_humidity():
+    value = Database.execute_equation(
+        "AVG(humidity)",  
+        "SENSEHAT_data", 
+        "WHERE cast(timestamp as Date) = cast(getdate() as Date)"
+    )
+    return str(value)
 
 def get_context_sense_hat():
+    Context.update_context()
     check_tb()
     Context.log_data_to_db("SENSEHAT_data", "((?), (?), (?))")
 
@@ -41,11 +63,12 @@ def check_tb():
             sys.exit()
 
 def check_context():
-    status = Preference.check_comfortable(Context.temp)
-    if status != "good" and Preference.comfortable_status == "True":
-        body = "Temperature is too {}: {} celcius".format(status, Context.temp)
-        PushBullet.send_notification("From Raspberry Pi", body)
-        save_status("False", Preference.create_new_table)
+    Preference.check_context()
+    if Context.temp_status != "good" or Context.humidity_status != "good":
+        noti_body = Context.get_context_message()
+        if Context.temp_status.find("too") == -1 or Context.humidity_status.find("too") == -1:
+            save_status("False", Preference.create_new_table)
+        PushBullet.send_notification("From Raspberry Pi", noti_body)
 
 def save_status(comfortable_status, create_new_table):
     json_content = {
@@ -59,3 +82,4 @@ def evaluate_context():
     reset_status()
     get_context_sense_hat()
     check_context()
+    report_last_record()
