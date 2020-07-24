@@ -1,0 +1,33 @@
+12/2/2020 13:52
+Temperature: 25 celcius
+Humidity: good %
+12/2/2020 13:52
+Temperature is uncomfortably too cold: 25 celcius
+Humidity is dangerously dry: 30 %
+12/2/2020 13:52
+Temperature is dangerously too cold: 25 celcius
+Humidity is uncomfortably dry: 25 %
+12/2/2020 13:52
+Temperature is uncomfortably hot: 25 celcius
+Humidity: 30 %
+12/2/2020 13:52
+Temperature is uncomfortably hot: 25 celcius
+Humidity: 30 %
+12/2/2020 13:52
+Temperature: None celcius
+Humidity: None %
+2020/12/2 13:52:53: BAD
+Temperature: 25 celcius, OK
+Humidity: 30 %, BAD
+2020/12/2 13:52:53, BAD
+Temperature is dangerously too hot: 25 celcius, BAD
+Humidity: 30 %, OK
+2020/12/2 13:52:53, OK
+Temperature is dangerously too hot: 25 celcius, BAD
+Humidity: 30 %, OK
+2020/12/2 13:52:53, OK
+Temperature is dangerously too hot: 50 celcius, BAD
+Humidity: 30 %, OK
+2020/12/2 13:52:53, BAD
+Temperature is dangerously too hot: 50 celcius, BAD
+Humidity: 30 %, OK

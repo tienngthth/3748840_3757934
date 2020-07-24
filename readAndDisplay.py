@@ -7,7 +7,7 @@ from model.database import Database
 from model.context import Context
 from monitorAndNotify import evaluate_context
 
-def get_latest_temp():
+def get_latest_context():
     global temp, humidity
     row = Database.select_a_record("temp, humidity",  "SENSEHAT_data", " ORDER BY timestamp DESC LIMIT 1")
     Context.temp = row[0]
@@ -31,7 +31,7 @@ def display_humidity():
 
 def main():
     evaluate_context()
-    get_latest_temp()
+    get_latest_context()
     Preference.check_context()
     end = time() + 52
     stop = False

@@ -10,8 +10,12 @@ This script is executed manually to generate the report.
 to record your data every day I suggest that you just record the last hour per day, 
 I means set the system to 11pm then that is the last data you will record per day.
 """
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from model.fileHandle import File
 from model.context import Context
 
 def record_data():
     File.write_csv("report.csv", Context.get_context_report_record())
+
+record_data()

@@ -24,18 +24,20 @@ def report_last_record():
     if (datetime.datetime.now().strftime("%H:%M") == "23:59"):
         record_data()
         if (Preference.comfortable_status == True):
-            noti_body = "Average temperature of the day: " + get_avg_temp()
-            noti_body += "\nAverage humidity of the day: " + get_avg_humidity()
-            noti_body += "\n See you tomorrow! Good night"
-            PushBullet.send_notification("From Raspberry Pi", noti_body)
-            
+            push_last_noti()
+
+def push_last_noti():
+    noti_body = "Average temperature of the day: " + get_avg_temp()
+    noti_body += "\nAverage humidity of the day: " + get_avg_humidity()
+    noti_body += "\n See you tomorrow! Good night"
+    PushBullet.send_notification("From Raspberry Pi", noti_body)
+
 def get_avg_temp():
-    value = Database.execute_equation(
+    return str(Database.execute_equation(
         "AVG(temp)",  
         "SENSEHAT_data", 
         "WHERE cast(timestamp as Date) = cast(getdate() as Date)"
-    )
-    return str(value)
+    ))
 
 def get_avg_humidity():
     value = Database.execute_equation(
