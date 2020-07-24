@@ -9,7 +9,7 @@ from monitorAndNotify import evaluate_context
 
 def get_latest_context():
     global temp, humidity
-    row = Database.select_a_record("temp, humidity",  "SENSEHAT_data", " ORDER BY timestamp DESC LIMIT 1")
+    row = Database.select_a_record("temp, humidity", " ORDER BY timestamp DESC LIMIT 1")
     Context.temp = row[0]
     Context.humidity = row[1]
 

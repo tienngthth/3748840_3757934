@@ -1,7 +1,7 @@
 import datetime
 import os
-# from .database import Database
-# from .senseHat import PiSenseHat
+from .database import Database
+from .senseHat import PiSenseHat
 
 class Context:
     timestamp = "2020/12/2 13:52:53"
@@ -10,15 +10,17 @@ class Context:
     temp_status = "too hot"
     humidity_status = "good"
     
-    # @staticmethod
-    # def update_context():
-    #     Context.timestamp = datetime.datetime.now().replace(microsecond=0) 
-    #     for count in [1, 3]:
-    #         raw_data = PiSenseHat.get_data()
-    #         humidity = Context.get_smooth(round(raw_data[2], 2))
-    #         temperature = Context.get_smooth(Context.get_temp(raw_data))
-    #     Context.temp = temperature
-    #     Context.humidity = humidity
+    @staticmethod
+    def update_context(temperature = None, humidity = None):
+        Context.timestamp = datetime.datetime.now().replace(microsecond=0) 
+        if humidity == None or temperature == None:
+            for count in [1, 3]:
+                raw_data = PiSenseHat.get_data()
+                humidity = Context.get_smooth(round(raw_data[2], 2))
+                temperature = Context.get_smooth(Context.get_temp(raw_data))
+        Context.temp = temperature
+        Context.humidity = humidity
+        Context.log_data_to_db()
 
     @staticmethod
     def get_temp(raw_data):
@@ -45,10 +47,10 @@ class Context:
                 + Context.get_smooth.variable[1] 
                 + Context.get_smooth.variable[2]) / 3
 
-    # @staticmethod
-    # def log_data_to_db(tb_name, values):
-    #     parameters = (Context.time, Context.temp, Context.humidity)
-    #     Database.insert_record(tb_name, values, parameters)
+    @staticmethod
+    def log_data_to_db():
+        parameters = (Context.timestamp, Context.temp, Context.humidity)
+        Database.insert_record("((?), (?), (?))", parameters)
 
     @staticmethod
     def get_context_report_record():        

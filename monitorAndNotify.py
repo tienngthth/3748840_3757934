@@ -7,6 +7,7 @@ from model.context import Context
 from model.pushBullet import PushBullet
 from model.database import Database
 from model.fileHandle import File
+from model.context import Context
 from createReport import record_data
 
 def read_preference():
@@ -34,29 +35,25 @@ def push_last_noti():
 
 def get_avg_temp():
     return str(Database.execute_equation(
-        "AVG(temp)",  
-        "SENSEHAT_data", 
+        "AVG(temp)",   
         "WHERE cast(timestamp as Date) = cast(getdate() as Date)"
     ))
 
 def get_avg_humidity():
     value = Database.execute_equation(
         "AVG(humidity)",  
-        "SENSEHAT_data", 
         "WHERE cast(timestamp as Date) = cast(getdate() as Date)"
     )
     return str(value)
 
 def get_context_sense_hat():
-    Context.update_context()
     check_tb()
-    Context.log_data_to_db("SENSEHAT_data", "((?), (?), (?))")
+    Context.update_context()  
 
 def check_tb():
     if Preference.create_new_table == "True":
         try:
             Database.create_tb(
-                "SENSEHAT_data",
                 "(timestamp DATETIME, temp NUMERIC, humidity NUMERIC)"
             )
             save_status(Preference.comfortable_status, "False")
