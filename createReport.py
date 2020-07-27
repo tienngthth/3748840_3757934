@@ -17,5 +17,4 @@ from model.context import Context
 
 def record_data():
     File.write_csv("report.csv", Context.get_context_report_record())
-
-record_data()
+    print("last record reported")

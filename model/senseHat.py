@@ -28,7 +28,7 @@ class PiSenseHat:
         sleep(time)
 
     @staticmethod
-    def get_data():
+    def get_context():
         temp_humidity = PiSenseHat.sense.get_temperature_from_humidity()
         temp_pressure = PiSenseHat.sense.get_temperature_from_pressure()
         humidity = PiSenseHat.sense.get_humidity()
@@ -38,6 +38,7 @@ class PiSenseHat:
     def show_message(message, colour = whi):
         PiSenseHat.sense.clear()
         PiSenseHat.sense.show_message(message, text_colour = colour)
+        # PiSenseHat.sense.show_message("AA", text_colour = colour)
         
     @staticmethod
     def show_letter(letter, colour = whi):

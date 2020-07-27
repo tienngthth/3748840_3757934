@@ -51,7 +51,6 @@ You can use any means to run the script automatically, such as a cronjob, system
 
 This script is executed manually to generate the report. Here is an example of report.csv:
  
-
 (5)	Create a python file called apiRESTful.py which will contain RESTful APIs that interact with the database. There should be 3 different methods involved as following:
 1.	GET: used to retrieve the newest temperature and humidity record with timestamp in JSON format.
 2.	POST: used to upload a record to database with current timestamp.

@@ -1,14 +1,5 @@
 """
-Create a python file called apiRESTful.py which will contain RESTful APIs that
-interact with the database. There should be 3 different methods involved as following:
-1. GET: used to retrieve the newest temperature and humidity record with
-timestamp in JSON format.
-2. POST: used to upload a record to database with current timestamp.
-3. PUT: used to update the newest record in database.
-You also need to prepare a script to demonstrate that your API does work during the
-demo session.
 This script should be scheduled to automatically run when the Pi boots.
-
 """
 import sys
 from flask import Flask, request, jsonify
@@ -23,11 +14,10 @@ def get_context():
     try:
         return get_latest_context()
     except:
-        PushBullet.send_notification("From Raspberry Pi", "Fail to update temperature")
-        sys.exit()
+        return "Fail to get context"
 
 def get_latest_context():
-    record = Database.select_a_record("*",  "ORDER BY timestamp DESC LIMIT 1")
+    record = Database.select_a_record("*",  " ORDER BY timestamp DESC LIMIT 1")
     json_content = {
         "timestamp" : record[0],
         "temp" : record[1],
@@ -40,33 +30,45 @@ def upload_context():
     try:
         temp = request.json['temp']
         humidity = request.json['humidity']
-        Context.update_context(temp, humidity)
-        return "Successfully upload new context"
+        if check_float(str(temp)) and check_float(str(humidity)):
+            Context.update_context(temp, humidity)
+            return "Successfully upload new context"
+        else:
+            return "Wrong temperture or humidity format"
     except:
-        return "Something went wrong with POST"
+        return "Fail to create new context"
 
-@app.route('/update/newest/context', methods=['POST'])
+@app.route('/update/newest/context', methods=['PUT'])
 def update_context():
-    update_temp()
-    update_humidity()
+    return update_temp() + "\n" + update_humidity()
 
 def update_temp():
-    temp = request.json['temp']
     try:
-        if (temp != None):
-            Database.update_last_record("temp", temp)
+        temp = request.json['temp']
+        if check_float(str(temp)):
+            Database.update_last_record("temp", (temp,))
+            return "Successfully update temperature"
+        else:
+            return "Wrong temperture format"
     except:
-        PushBullet.send_notification("From Raspberry Pi", "Fail to update temperature")
-        sys.exit()
+        return "Fail to update temperature"
 
 def update_humidity():
-    humidity = request.json['humidity']
     try:
-        if (humidity != None):
-            Database.update_last_record("humidity", humidity)
+        humidity = request.json['humidity']
+        if check_float(str(humidity)):
+            Database.update_last_record("humidity", (humidity,))
+            return "Successfully update humidity"
+        else:
+            return "Wrong humidity format"
     except:
-        PushBullet.send_notification("From Raspberry Pi", "Fail to update humidity")
-        sys.exit()
+        return "Fail to update humidity"
+
+def check_float(float_string):
+    if float_string.find(".") != -1:
+        return float_string.replace('.', '', 1).isdigit()
+    else:
+        return float_string.isdigit()
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

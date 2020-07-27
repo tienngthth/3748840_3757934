@@ -157,5 +157,6 @@ def main():
             emoji.display()
         if (PiSenseHat.detect_stick()):
             stop = True
-            
-main()
+
+if __name__ == "__main__": 
+    main()
