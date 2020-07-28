@@ -52,5 +52,9 @@ class PiSenseHat:
                 return True
         return False
 
+    @staticmethod
+    def get_accelerometer(): 
+        return PiSenseHat.sense.get_accelerometer()
+
 
 
