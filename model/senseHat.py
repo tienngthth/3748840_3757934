@@ -29,9 +29,10 @@ class PiSenseHat:
 
     @staticmethod
     def get_data():
-        temp = PiSenseHat.sense.get_temperature()
+        temp_humidity = PiSenseHat.sense.get_temperature_from_humidity()
+        temp_pressure = PiSenseHat.sense.get_temperature_from_pressure()
         humidity = PiSenseHat.sense.get_humidity()
-        return (temp, humidity)
+        return (temp_humidity, temp_pressure, humidity)
 
     @staticmethod
     def show_message(message, colour = whi):
@@ -50,6 +51,10 @@ class PiSenseHat:
                 #PiSenseHat.sense.clear()
                 return True
         return False
+
+    @staticmethod
+    def get_accelerometer(): 
+        return PiSenseHat.sense.get_accelerometer()
 
 
 
