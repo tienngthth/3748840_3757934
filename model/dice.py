@@ -1,6 +1,6 @@
-from random import randint
-from senseHat import bla, red, whi, PiSenseHat
 import time
+from random import randint
+from .senseHat import bla, red, whi, PiSenseHat
 
 class Dice:
     dice_value = None
@@ -65,58 +65,58 @@ class Dice:
         bla, red, red, red, red, red, red, red,
     ]
     dice_pixels = (dice_one, dice_two, dice_three, dice_four, dice_five, dice_six)
-    threshold = 0.75
+    shaking_threshold = 0.2
     speed_change = 0.25
-    speed = 0.01
-    myDict = None
-    oldDict = None
-
-    @staticmethod
-    def compare_dicts(firstDict,secondDict):
-        diceDiff = 0.0
-        for key, value in firstDict.items():
-            diceDiff += abs(firstDict.get(key) - secondDict.get(key))
-        return diceDiff
-
-    @staticmethod
-    def cal_speed_change():
-        Dice.speed = Dice.speed_change/Dice.compare_dicts(Dice.myDict, Dice.oldDict)
-
-    @staticmethod
-    def role_dice():
-        Dice.myDict = PiSenseHat.get_accelerometer()
-        Dice.oldDict = PiSenseHat.get_accelerometer()
-        while(Dice.compare_dicts(Dice.myDict, Dice.oldDict) < Dice.threshold):
-            print("not shaking")
-            Dice.oldDict = Dice.myDict
-            time.sleep(1)
-            Dice.myDict = PiSenseHat.get_accelerometer()
-
-        while(Dice.compare_dicts(Dice.myDict, Dice.oldDict) > Dice.threshold):
-            print("shaking")
-            Dice.oldDict = Dice.myDict
-            time.sleep(Dice.speed)
-            Dice.myDict = PiSenseHat.get_accelerometer()
-            Dice.dice_turn(Dice.cal_speed_change())
-        
-        print("done")
-        print(Dice.dice_value)
-        return Dice.dice_value
-
-    @staticmethod
-    def dice_turn(time_change):
-        Dice.dice_value = Dice.roll_dice()
-        Dice.display(time_change)
-        print(time_change)
-        return Dice.dice_value
+    speed = None
+    current_reading = None
+    old_reading = None
 
     @staticmethod
     def roll_dice():
-        #detect (key stick -> motion -> stop)
-        return randint(1, 6)
+        Dice.current_reading = PiSenseHat.get_accelerometer()
+        Dice.old_reading = Dice.current_reading
+        Dice.speed = 0.01
+        Dice.wait_for_shake()
+        Dice.detect_shake()
+        return Dice.dice_value
 
     @staticmethod
-    def display(time_change):
-        PiSenseHat.display_image_duration(Dice.dice_pixels[Dice.dice_value - 1],time_change)
+    def wait_for_shake():
+        while(Dice.compare_reading(Dice.current_reading, Dice.old_reading) < Dice.shaking_threshold):
+            print("not shaking")
+            Dice.old_reading = Dice.current_reading
+            time.sleep(0.5)
+            Dice.current_reading = PiSenseHat.get_accelerometer()
 
-Dice.role_dice()
+    @staticmethod
+    def detect_shake():
+        while(Dice.compare_reading(Dice.current_reading, Dice.old_reading) > Dice.shaking_threshold):
+            print("shaking")
+            Dice.old_reading = Dice.current_reading
+            time.sleep(Dice.speed)
+            Dice.current_reading = PiSenseHat.get_accelerometer()
+            Dice.display_dice()
+        print("done")
+        print(Dice.dice_value)
+
+    @staticmethod
+    def compare_reading(first_reading, second_reading):
+        dice_diff = 0.0
+        for key, value in first_reading.items():
+            dice_diff += abs(first_reading.get(key) - second_reading.get(key))
+        return dice_diff
+
+    @staticmethod
+    def display_dice():
+        Dice.dice_value = randint(1, 6)
+        Dice.display()
+
+    @staticmethod
+    def display():
+        Dice.cal_speed_change()
+        PiSenseHat.display_image_duration(Dice.dice_pixels[Dice.dice_value - 1])
+    
+    @staticmethod
+    def cal_speed_change():
+        Dice.speed = Dice.speed_change/Dice.compare_reading(Dice.current_reading, Dice.old_reading)
+

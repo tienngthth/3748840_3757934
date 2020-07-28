@@ -22,7 +22,7 @@ class PiSenseHat:
     sense.low_light = True
     
     @staticmethod
-    def display_image_duration(image, time):
+    def display_image_duration(image, time = 0):
         PiSenseHat.sense.clear()
         PiSenseHat.sense.set_pixels(image)
         sleep(time)
@@ -35,9 +35,9 @@ class PiSenseHat:
         return (temp_humidity, temp_pressure, humidity)
 
     @staticmethod
-    def show_message(message, colour = whi):
+    def show_message(message, colour = whi, speed = 0.06):
         PiSenseHat.sense.clear()
-        PiSenseHat.sense.show_message(message, text_colour = colour)
+        PiSenseHat.sense.show_message(message, text_colour = colour, scroll_speed = speed)
         
     @staticmethod
     def show_letter(letter, colour = whi):
@@ -48,13 +48,10 @@ class PiSenseHat:
     def detect_stick():
         for event in PiSenseHat.sense.stick.get_events():
             if event.action == "pressed":
-                #PiSenseHat.sense.clear()
                 return True
         return False
 
     @staticmethod
     def get_accelerometer(): 
-        return PiSenseHat.sense.get_accelerometer()
-
-
+        return PiSenseHat.sense.get_accelerometer_raw()
 
