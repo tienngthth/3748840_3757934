@@ -2,8 +2,6 @@ from random import randint
 from senseHat import bla, red, whi, PiSenseHat
 import time
 
-
-
 class Dice:
     dice_value = None
     dice_one = [
