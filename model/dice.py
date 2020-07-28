@@ -120,4 +120,3 @@ class Dice:
         PiSenseHat.display_image_duration(Dice.dice_pixels[Dice.dice_value - 1],time_change)
 
 Dice.role_dice()
-dfskjflk
