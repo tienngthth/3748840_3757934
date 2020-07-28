@@ -4,20 +4,26 @@ import datetime
 import sys
 from model.preference import Preference
 from model.context import Context
-from model.senseHat import SenseHat
+from model.senseHat import PiSenseHat
 from model.pushBullet import PushBullet
 from model.database import Database
 from model.fileHandle import File
-#from readAndDisplay import display_temp
+
+def read_preference():
+    try:
+        Preference.read_preference()
+    except:
+        PushBullet.send_notification("From Raspberry Pi", "Fail to read files")
+        sys.exit()
 
 def reset_status():
     if (datetime.datetime.now().strftime("%H:%M") == "00:00"):
         save_status("True", Preference.create_new_table)
 
 def get_context_sense_hat():
-    Context.set_context(SenseHat.get_data()[0:2])
+    Context.set_context(PiSenseHat.get_data()[0:2])
     check_tb()
-    log_data_to_db()
+    Context.log_data_to_db("SENSEHAT_data", "((?), (?), (?))")
 
 def check_tb():
     if Preference.create_new_table == "True":
@@ -30,10 +36,6 @@ def check_tb():
         except:
             PushBullet.send_notification("From Raspberry Pi", "Fail to create database table")
             sys.exit()
-
-def log_data_to_db():
-    parameters = (Context.time, Context.temp, Context.humidity)
-    Database.insert_record("SENSEHAT_data", "((?), (?), (?))", parameters)
 
 def check_context():
     status = Preference.check_comfortable(Context.temp)
@@ -50,7 +52,7 @@ def save_status(comfortable_status, create_new_table):
     File.write_json("status.json", json_content)
 
 def evaluate_context():
-    Preference.read_preference()
+    read_preference()
     reset_status()
     get_context_sense_hat()
     check_context()

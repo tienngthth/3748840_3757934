@@ -1,5 +1,4 @@
 import sys
-from .pushBullet import PushBullet
 from .fileHandle import File
 
 class Preference:
@@ -12,13 +11,9 @@ class Preference:
 
     @staticmethod
     def read_preference():
-        try:
-            config_json = File.read_json("config.json")
-            status_json = File.read_json("status.json")
-            Preference.parse_json(config_json, status_json)
-        except:
-            PushBullet.send_notification("From Raspberry Pi", "Fail to read files")
-            sys.exit()
+        config_json = File.read_json("config.json")
+        status_json = File.read_json("status.json")
+        Preference.parse_json(config_json, status_json)
 
     @staticmethod
     def parse_json(config_json, status_json):

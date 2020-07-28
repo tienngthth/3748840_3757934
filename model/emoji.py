@@ -1,11 +1,11 @@
-from .senseHat import SenseHat
+from .senseHat import PiSenseHat
 
 class Emoji:
     def __init__(self, images):
-        self.images = images 
+        self.__images = images 
     
     def display(self):
         count = 0
         while count < 10:
-            SenseHat.display_image_duration(self.images[count % 4], 0.3)
+            PiSenseHat.display_image_duration(self.__images[count % 4], 0.3)
             count += 1
