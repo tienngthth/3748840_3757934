@@ -7,17 +7,16 @@ class Context:
     timestamp = "2020/12/2 13:52:53"
     temp = None
     humidity = None
-    temp_status = "too hot"
-    humidity_status = "good"
+    temp_status = None
+    humidity_status = None
     
     @staticmethod
     def update_context(temperature = None, humidity = None):
         Context.timestamp = datetime.datetime.now().replace(microsecond=0) 
         if humidity == None or temperature == None:
-            for count in [1, 3]:
-                raw_data = PiSenseHat.get_data()
-                humidity = Context.get_smooth(round(raw_data[2], 2))
-                temperature = Context.get_smooth(Context.get_temp(raw_data))
+            raw_data = PiSenseHat.get_context()
+            humidity = round(raw_data[2], 2)
+            temperature = round(Context.get_temp(raw_data), 2)
         Context.temp = temperature
         Context.humidity = humidity
         Context.log_data_to_db()
@@ -32,20 +31,6 @@ class Context:
     def get_cpu_temp():
         res = os.popen("vcgencmd measure_temp").readline()
         return float(res.replace("temp=","").replace("'C\n",""))
-
-    # Use moving average to smooth readings.
-    @staticmethod
-    def get_smooth(data):
-        if not hasattr(Context.get_smooth, "variable"):
-            Context.get_smooth.t = [data,data,data]
-        
-        Context.get_smooth.variable[2] = Context.get_smooth.variable[1]
-        Context.get_smooth.variable[1] = Context.get_smooth.variable[0] 
-        Context.get_smooth.variable[0] = data
-
-        return (Context.get_smooth.variable[0] 
-                + Context.get_smooth.variable[1] 
-                + Context.get_smooth.variable[2]) / 3
 
     @staticmethod
     def log_data_to_db():
@@ -71,11 +56,11 @@ class Context:
     def get_temp_message():
         if (Context.temp_status != "good"):
             if (Context.temp_status.find("too") != -1):
-                return "Temperature is dangerously {}: {} celcius, BAD".format(Context.temp_status, Context.temp)
+                return "Temperature is dangerously {}: {} Celsius, BAD".format(Context.temp_status, Context.temp)
             else:
-                return "Temperature is uncomfortably {}: {} celcius, BAD".format(Context.temp_status, Context.temp)
+                return "Temperature is uncomfortably {}: {} Celsius, BAD".format(Context.temp_status, Context.temp)
         else:
-            return Context.to_string_temp()
+            return Context.to_string_temp() + ", OK"
 
     @staticmethod
     def get_humidity_message():
@@ -85,12 +70,12 @@ class Context:
             else:
                 return "Humidity is uncomfortably {}: {} %, BAD".format(Context.humidity_status, Context.humidity)
         else:
-            return Context.to_string_humidity()
+            return Context.to_string_humidity() + ", OK"
 
     @staticmethod
     def to_string_humidity():
-        return "Humidity: {} %, OK".format(Context.humidity)
+        return "Humidity: {} %".format(Context.humidity)
 
     @staticmethod
     def to_string_temp():
-        return "Temperature: {} celcius, OK".format(Context.temp)
+        return "Temperature: {} Celsius".format(Context.temp)

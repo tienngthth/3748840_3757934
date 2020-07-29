@@ -14,26 +14,26 @@ def get_latest_context():
     Context.humidity = row[1]
 
 def display_temp():
-    if (Context.temp_status.find("cold")):
-        PiSenseHat.show_message(Context.to_string_temp, red)
-    elif Context.temp_status.find("hot"):
-        PiSenseHat.show_message(Context.to_string_temp, red)
+    if Context.temp_status.find("cold") != -1:
+        PiSenseHat.show_message(Context.to_string_temp(), blu)
+    elif Context.temp_status.find("hot")  != -1:
+        PiSenseHat.show_message(Context.to_string_temp(), red)
     else:
-        PiSenseHat.show_message(Context.to_string_temp, gre)
+        PiSenseHat.show_message(Context.to_string_temp(), gre)
 
 def display_humidity():
-    if Context.humidity_status.find("dry"):
-        PiSenseHat.show_message(Context.to_string_humidity, blu)
-    elif Context.humidity_status.find("humid"):
-        PiSenseHat.show_message(Context.to_string_humidity, red)
+    if Context.humidity_status.find("dry")  != -1:
+        PiSenseHat.show_message(Context.to_string_humidity(), blu)
+    elif Context.humidity_status.find("humid")  != -1:
+        PiSenseHat.show_message(Context.to_string_humidity(), red)
     else:
-        PiSenseHat.show_message(Context.to_string_humidity, gre)
+        PiSenseHat.show_message(Context.to_string_humidity(), gre)
 
 def main():
     evaluate_context()
     get_latest_context()
     Preference.check_context()
-    end = time() + 52
+    end = time() + 50
     stop = False
     while time() < end and not stop:
         display_temp()
@@ -42,4 +42,5 @@ def main():
             stop = True
     PiSenseHat.show_letter("*")
 
-main()
+if __name__ == "__main__":
+    main()
