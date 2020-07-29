@@ -5,8 +5,8 @@ from .senseHat import PiSenseHat
 
 class Context:
     timestamp = "2020/12/2 13:52:53"
-    temp = 50
-    humidity = 30
+    temp = None
+    humidity = None
     temp_status = "too hot"
     humidity_status = "good"
     
