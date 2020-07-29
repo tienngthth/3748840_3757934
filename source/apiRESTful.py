@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import sys
 from flask import Flask, request, jsonify
 from model.database import Database
 from model.context import Context
 from model.pushBullet import PushBullet
+from model.util import Util
 
 app = Flask(__name__)
 
@@ -55,19 +55,13 @@ def update_temp():
 def update_humidity():
     try:
         humidity = request.json['humidity']
-        if check_float(str(humidity)):
+        if Util.check_float(str(humidity)):
             Database.update_last_record("humidity", (humidity,))
             return "Successfully update humidity"
         else:
             return "Wrong humidity format"
     except:
         return "Fail to update humidity"
-
-def check_float(float_string):
-    if float_string.find(".") != -1:
-        return float_string.replace('.', '', 1).isdigit()
-    else:
-        return float_string.isdigit()
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

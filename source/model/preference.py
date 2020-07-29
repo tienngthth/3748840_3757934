@@ -1,6 +1,7 @@
 import sys
 from .fileHandle import File
 from .context import Context
+from .util import Util
 
 class Preference:
     cold_max = None
@@ -22,6 +23,7 @@ class Preference:
 
     @staticmethod
     def parse_json(config_json, status_json):
+        Preference.validate_config_preference(config_json)
         Preference.set_preference (
             float(config_json["cold_max"]),
             float(config_json["comfortable_min_temp"]),
@@ -35,6 +37,13 @@ class Preference:
             status_json["create_new_table"]
     )
 
+    @staticmethod
+    def validate_config_preference(config_dict):
+        for key, value in config_dict.items():
+            if not Util.check_float(str(value)):
+                print("Wrong " + key + " format - invalid number")
+                sys.exit()
+            
     @staticmethod
     def set_preference(
         cold_max, comfortable_min_temp, 
@@ -53,7 +62,8 @@ class Preference:
         Preference.humid_min = humid_min
         Preference.comfortable_status = comfortable_status
         Preference.create_new_table = create_new_table
-   
+               
+
     @staticmethod
     def set_comfortable_status(comfortable_status):
         Preference.comfortable_status = comfortable_status

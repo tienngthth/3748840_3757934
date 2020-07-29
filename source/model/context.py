@@ -4,22 +4,27 @@ from .database import Database
 from .senseHat import PiSenseHat
 
 class Context:
-    timestamp = "2020/12/2 13:52:53"
+    timestamp = None
     temp = None
     humidity = None
     temp_status = None
     humidity_status = None
     
     @staticmethod
-    def update_context(temperature = None, humidity = None):
+    def update_context(timestamp = None, temperature = None, humidity = None):
+        if humidity == None or temperature == None or timestamp == None:
+            Context.update_real_time()
+        else:
+            Context.temp = temperature
+            Context.humidity = humidity
+            Context.timestamp = timestamp
+
+    @staticmethod
+    def update_real_time():
+        raw_data = PiSenseHat.get_context()
+        Context.humidity = round(raw_data[2], 2)
+        Context.temp = round(Context.get_temp(raw_data), 2)
         Context.timestamp = datetime.datetime.now().replace(microsecond=0) 
-        if humidity == None or temperature == None:
-            raw_data = PiSenseHat.get_context()
-            humidity = round(raw_data[2], 2)
-            temperature = round(Context.get_temp(raw_data), 2)
-        Context.temp = temperature
-        Context.humidity = humidity
-        Context.log_data_to_db()
 
     @staticmethod
     def get_temp(raw_data):

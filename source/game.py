@@ -13,10 +13,12 @@ def play_game(players_order):
     while True:
         for player in players_order:
             if player.play():
+                end_record()
                 return player.get_name()
+
+def end_game():
                 
 def main():
     player_1 = Player("1")
     player_2 = Player("2")
     players_order = find_first_player(player_1, player_2)
-    winner = play_game(players_order)

@@ -8,18 +8,16 @@ from model.pushBullet import PushBullet
 from model.database import Database
 from model.fileHandle import File
 from model.context import Context
-from createReport import record_data
 
 def read_preference():
-    try:
-        Preference.read_preference()
-    except:
-        PushBullet.send_notification("From Raspberry Pi", "Fail to read files")
-        sys.exit()
+    # try:
+    Preference.read_preference()
+    # except:
+    #     PushBullet.send_notification("From Raspberry Pi", "Fail to read files")
+    #     sys.exit()
 
 def reset():
     if (datetime.datetime.now().strftime("%H:%M") == "11:16"):
-        record_data()
         if (Preference.comfortable_status == True):
             push_last_noti()
         else:
@@ -46,6 +44,7 @@ def get_avg_humidity():
 def get_context_sense_hat():
     check_tb()
     Context.update_context()    
+    Context.log_data_to_db()
 
 def check_tb():
     if Preference.create_new_table == True:

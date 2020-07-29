@@ -8,10 +8,8 @@ from model.context import Context
 from monitorAndNotify import evaluate_context
 
 def get_latest_context():
-    global temp, humidity
-    row = Database.select_a_record("temp, humidity", " ORDER BY timestamp DESC LIMIT 1")
-    Context.temp = row[0]
-    Context.humidity = row[1]
+    last_context = Database.select_a_record("*", " ORDER BY timestamp DESC LIMIT 1")
+    Context.update_context(last_context[0], last_context[1], last_context[2])
 
 def display_temp():
     if Context.temp_status.find("cold") != -1:
