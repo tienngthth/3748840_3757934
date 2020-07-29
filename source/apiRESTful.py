@@ -1,6 +1,5 @@
-"""
-This script should be scheduled to automatically run when the Pi boots.
-"""
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import sys
 from flask import Flask, request, jsonify
 from model.database import Database

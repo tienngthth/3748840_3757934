@@ -18,7 +18,7 @@ def read_preference():
         sys.exit()
 
 def reset():
-    if (datetime.datetime.now().strftime("%H:%M") == "22:03"):
+    if (datetime.datetime.now().strftime("%H:%M") == "11:16"):
         record_data()
         if (Preference.comfortable_status == True):
             push_last_noti()
@@ -45,7 +45,7 @@ def get_avg_humidity():
 
 def get_context_sense_hat():
     check_tb()
-    Context.update_context()
+    Context.update_context()    
 
 def check_tb():
     if Preference.create_new_table == True:

@@ -35,9 +35,9 @@ class PiSenseHat:
         return (temp_humidity, temp_pressure, humidity)
 
     @staticmethod
-    def show_message(message, colour = whi):
+    def show_message(message, colour = whi, speed = 0.08):
         PiSenseHat.sense.clear()
-        PiSenseHat.sense.show_message(message, text_colour = colour)
+        PiSenseHat.sense.show_message(message, text_colour = colour, scroll_speed = speed)
         # PiSenseHat.sense.show_message("AA", text_colour = colour)
         
     @staticmethod

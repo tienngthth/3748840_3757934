@@ -33,7 +33,7 @@ def main():
     evaluate_context()
     get_latest_context()
     Preference.check_context()
-    end = time() + 50
+    end = time() + 40
     stop = False
     while time() < end and not stop:
         display_temp()

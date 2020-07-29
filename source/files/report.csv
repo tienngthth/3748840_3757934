@@ -1,5 +1,5 @@
-2020-07-17 14:57:21, BAD
-Temperature: 24.67 celcius, OK
+2020-07-17 14:57:21, BAD 
+Temperature: 24.67 celcius, OK 
 Humidity is uncomfortably dry: 34.98 %, BAD
 2020-07-17 15:03:38, OK
 Temperature: 24.42 celcius, OK
@@ -109,3 +109,9 @@ Humidity: 34.6 %, OK
 2020-07-27 22:03:11, BAD
 Temperature: 26.29 Celsius, OK
 Humidity is uncomfortably dry: 47.65 %, BAD
+2020-07-29 11:07:30, BAD
+Temperature: 27.75 Celsius, OK
+Humidity is uncomfortably dry: 33.26 %, BAD
+2020-07-29 11:16:03, OK
+Temperature: 27.77 Celsius, OK
+Humidity: 31.85 %, OK
