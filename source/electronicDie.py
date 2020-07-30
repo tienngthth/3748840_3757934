@@ -1,5 +1,9 @@
-"""
-(1)	Create a python file called electronicDie.py which will trigger the roll of the die when shaking 
-the Pi. In this task, you need to be able to detect shaking motion by IMU sensor and then display the 
-die in random matter.
-"""
+from model.senseHat import PiSenseHat
+from model.dice import Dice
+import time
+
+def roll_dice():
+    Dice.roll_dice()
+
+if __name__ == "__main__":
+    roll_dice()

@@ -7,21 +7,45 @@ from model.context import Context
 from model.pushBullet import PushBullet
 from model.database import Database
 from model.fileHandle import File
-from model.context import Context
+from model.util import Util
 
-def read_preference():
-    # try:
-    Preference.read_preference()
-    # except:
-    #     PushBullet.send_notification("From Raspberry Pi", "Fail to read files")
-    #     sys.exit()
+def start_program():
+    global preference, context
+    context = Context()
+    preference = Util.read_preference()
 
+def get_context_sense_hat():
+    check_tb()
+    context.update_real_time_context()    
+
+def check_tb():
+    if preference.create_new_table == True:
+        try:
+            Database.create_tb(
+                "(timestamp DATETIME, temp NUMERIC, humidity NUMERIC)"
+            )
+            preference.create_new_table = False
+        except:
+            print("Fail to create new database table")
+            sys.exit()
+
+def check_context():
+    preference.check_context()
+    if context.temp_status != "good" or context.humidity_status != "good":
+        noti_body = context.get_context_message()
+        if context.temp_status.find("too") == -1 and context.humidity_status.find("too") == -1:
+            if preference.comfortable_status == True:
+                PushBullet.send_notification("From Raspberry Pi", noti_body)
+                preference.comfortable_status = False
+        else:
+            PushBullet.send_notification("From Raspberry Pi", noti_body)
+    
 def reset():
     if (datetime.datetime.now().strftime("%H:%M") == "11:16"):
-        if (Preference.comfortable_status == True):
+        if (preference.comfortable_status == True):
             push_last_noti()
         else:
-            save_status(True, Preference.create_new_table)
+            preference.comfortable_status = True
 
 def push_last_noti():
     noti_body = "Average temperature of the day: " + get_avg_temp() + " Celsius"
@@ -30,55 +54,35 @@ def push_last_noti():
     PushBullet.send_notification("From Raspberry Pi", noti_body)
 
 def get_avg_temp():
-    return str(round(Database.execute_equation(
-        "AVG(temp)",
-        " WHERE timestamp >= date('now','-1 day')"
-    ), 2))
+    try:
+        return str(round(Database.execute_equation(
+            "AVG(temp)",
+            " WHERE timestamp >= date('now','-1 day')"
+        ), 2))
+    except:
+        print("Fail to get average temperature")
+        sys.exit()
 
 def get_avg_humidity():
-    return str(round(Database.execute_equation(
-        "AVG(humidity)",
-        " WHERE timestamp >= date('now','-1 day')"
-    ), 2))
+    try:
+        return str(round(Database.execute_equation(
+            "AVG(humidity)",
+            " WHERE timestamp >= date('now','-1 day')"
+        ), 2))
+    except:
+        print("Fail to get average humidity")
+        sys.exit()
 
-def get_context_sense_hat():
-    check_tb()
-    Context.update_context()    
-    Context.log_data_to_db()
-
-def check_tb():
-    if Preference.create_new_table == True:
-        try:
-            Database.create_tb(
-                "(timestamp DATETIME, temp NUMERIC, humidity NUMERIC)"
-            )
-            save_status(Preference.comfortable_status, False)
-        except:
-            PushBullet.send_notification("From Raspberry Pi", "Fail to create database table")
-            sys.exit()
-
-def check_context():
-    Preference.check_context()
-    if Context.temp_status != "good" or Context.humidity_status != "good":
-        noti_body = Context.get_context_message()
-        if Context.temp_status.find("too") == -1 and Context.humidity_status.find("too") == -1:
-            if Preference.comfortable_status == True:
-                PushBullet.send_notification("From Raspberry Pi", noti_body)
-                save_status(False, Preference.create_new_table)
-        else:
-            PushBullet.send_notification("From Raspberry Pi", noti_body)
-        
-
-def save_status(comfortable_status, create_new_table):
+def save_status():
     json_content = {
-            "comfortable_status" : comfortable_status,
-            "create_new_table" : create_new_table
+        "comfortable_status" : preference.comfortable_status,
+        "create_new_table" : preference.create_new_table
     }
-    File.write_json("status.json", json_content)
-    read_preference()
+    File.write_json(preference.status_file_name, json_content)
 
 def evaluate_context():
-    read_preference()
+    start_program()
     get_context_sense_hat()
     check_context()
     reset()
+    save_status()

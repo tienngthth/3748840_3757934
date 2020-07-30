@@ -1,7 +1,10 @@
 class Score:
     def __init__(self, target_score = 30):
-        self.__score = None
+        self.__score = 0
         self.__target_score = target_score
+
+    def get_score(self):
+        return self.__score
 
     def update_score(self, score):
         self.__score += score

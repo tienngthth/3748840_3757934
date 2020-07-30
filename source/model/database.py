@@ -51,7 +51,6 @@ class Database:
         Database.curs.execute("INSERT INTO " + Database.tb_name + " values" + values, parameters)
         Database.conn.commit()
         Database.conn.close()
-        # Database.display_db()
 
     @staticmethod
     def create_tb(columns, tb_name = None, db_path = None):

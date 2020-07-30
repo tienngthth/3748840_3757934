@@ -1,36 +1,47 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import sys
 from time import time
 from model.senseHat import PiSenseHat, blu, gre, red, whi
 from model.preference import Preference
 from model.database import Database
 from model.context import Context
 from monitorAndNotify import evaluate_context
+from model.util import Util
+
+def start_program():
+    global preference, context
+    context = Context()
+    preference = Util.read_preference()
 
 def get_latest_context():
-    last_context = Database.select_a_record("*", " ORDER BY timestamp DESC LIMIT 1")
-    Context.update_context(last_context[0], last_context[1], last_context[2])
+    try:
+        last_context = Database.select_a_record("temp, humidity", " ORDER BY timestamp DESC LIMIT 1")
+        context.update_context(last_context[0], last_context[1])
+    except:
+        print("Fail to get latest record from database")
+        sys.exit()
 
 def display_temp():
-    if Context.temp_status.find("cold") != -1:
-        PiSenseHat.show_message(Context.to_string_temp(), blu)
-    elif Context.temp_status.find("hot")  != -1:
-        PiSenseHat.show_message(Context.to_string_temp(), red)
+    if context.temp_status.find("cold") != -1:
+        PiSenseHat.show_message(context.to_string_temp(), blu)
+    elif context.temp_status.find("hot")  != -1:
+        PiSenseHat.show_message(context.to_string_temp(), red)
     else:
-        PiSenseHat.show_message(Context.to_string_temp(), gre)
+        PiSenseHat.show_message(context.to_string_temp(), gre)
 
 def display_humidity():
-    if Context.humidity_status.find("dry")  != -1:
-        PiSenseHat.show_message(Context.to_string_humidity(), blu)
-    elif Context.humidity_status.find("humid")  != -1:
-        PiSenseHat.show_message(Context.to_string_humidity(), red)
+    if context.humidity_status.find("dry")  != -1:
+        PiSenseHat.show_message(context.to_string_humidity(), blu)
+    elif context.humidity_status.find("humid")  != -1:
+        PiSenseHat.show_message(context.to_string_humidity(), red)
     else:
-        PiSenseHat.show_message(Context.to_string_humidity(), gre)
+        PiSenseHat.show_message(context.to_string_humidity(), gre)
 
-def main():
-    evaluate_context()
+def read_display_db_record():
+    start_program()
     get_latest_context()
-    Preference.check_context()
+    preference.check_context()
     end = time() + 40
     stop = False
     while time() < end and not stop:
@@ -41,4 +52,5 @@ def main():
     PiSenseHat.show_letter("*")
 
 if __name__ == "__main__":
-    main()
+    evaluate_context()
+    read_display_db_record()
