@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
+from createReport import start_program
 
 def test_get_api():
     resp = requests.get('http://127.0.0.1:8080/get/newest/context')
@@ -22,6 +23,7 @@ def test_upload_api():
     )
     print(resp.content)
     test_get_api()
+    start_program()
 
 def test_update_api():
     data_send = {"temp": "22.2", "humidity": 35}
@@ -35,6 +37,7 @@ def test_update_api():
     )
     print(resp.content)
     test_get_api()
+    start_program()
 
 if __name__ == "__main__":
     test_upload_api()

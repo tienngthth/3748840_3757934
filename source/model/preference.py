@@ -2,9 +2,10 @@ import sys
 from .fileHandle import File
 from .context import Context
 from .util import Util
+from .pushBullet import PushBullet
 
 class Preference:
-    def __init__(self, preference_file_name, status_file_name):
+    def __init__(self):
         self.__cold_max = None
         self.__comfortable_min_temp = None
         self.__comfortable_max_temp = None
@@ -15,31 +16,32 @@ class Preference:
         self.__humid_min = None
         self.__comfortable_status = None
         self.__create_new_table = None
-        self.__preference_file_name = preference_file_name
-        self.__status_file_name = status_file_name
+        self.__config_file_name = "config.json"
+        self.__status_file_name = "status.json"
         self.read_preference()
 
     def read_preference(self):
         try:
-            preference_json = File.read_json(self.__preference_file_name)
+            config_json = File.read_json(self.__config_file_name)
             status_json = File.read_json(self.__status_file_name)
         except:
-            print("Preference or status file is missing or having wrong content format, invalid json format")
+            message = "Preference or status file is missing or having wrong content format, invalid json format"
+            PushBullet.send_notification("From Raspberry Pi", message)
             sys.exit()
-        self.__parse_json(preference_json, status_json)
+        self.__parse_json(config_json, status_json)
 
-    def __parse_json(self, preference_json, status_json):
-        self.__validate_preference_values(preference_json)
+    def __parse_json(self, config_json, status_json):
+        self.__validate_config_values(config_json)
         self.__validate_status_values(status_json)
         self.__set_preference (
-            float(preference_json["cold_max"]),
-            float(preference_json["comfortable_min_temp"]),
-            float(preference_json["comfortable_max_temp"]),
-            float(preference_json["hot_min"]),
-            float(preference_json["dry_max"]),
-            float(preference_json["comfortable_min_humidity"]),
-            float(preference_json["comfortable_max_humidity"]),
-            float(preference_json["humid_min"]),
+            float(config_json["cold_max"]),
+            float(config_json["comfortable_min_temp"]),
+            float(config_json["comfortable_max_temp"]),
+            float(config_json["hot_min"]),
+            float(config_json["dry_max"]),
+            float(config_json["comfortable_min_humidity"]),
+            float(config_json["comfortable_max_humidity"]),
+            float(config_json["humid_min"]),
             status_json["comfortable_status"],
             status_json["create_new_table"]
     )
@@ -47,24 +49,24 @@ class Preference:
     def __validate_status_values(self, status_dict):
         for key, value in status_dict.items():
             if type(value) is not bool:
-                print("Wrong " + key + " data type, invalid boolean")
+                PushBullet.send_notification("From Raspberry Pi", "Wrong " + key + " data type, invalid boolean")
                 sys.exit()
 
-    def __validate_preference_values(self, preference_value_dict):
+    def __validate_config_values(self, config_dict):
         values = []
-        for key, value in preference_value_dict.items():
+        for key, value in config_dict.items():
             if not Util.check_float(str(value)):
-                print("Wrong " + key + " data type, invalid number")
+                PushBullet.send_notification("From Raspberry Pi", "Wrong " + key + " data type, invalid number")
                 sys.exit()
             else:
                 values.append(value)
-        self.__check_context_preference_value_order(values[:4])
-        self.__check_context_preference_value_order(values[4:])
+        self.__check_cconfig_value_order(values[:4])
+        self.__check_cconfig_value_order(values[4:])
         
-    def __check_context_preference_value_order(self, values):
+    def __check_cconfig_value_order(self, values):
         for i in range(0,3):
             if values[i] > values[i + 1]:
-                print("Invalid context preference values order")
+                PushBullet.send_notification("From Raspberry Pi", "Invalid context preference values order")
                 sys.exit()
 
     def __set_preference(
@@ -75,42 +77,42 @@ class Preference:
         comfortable_max_humidity, humid_min, 
         comfortable_status, create_new_table
     ):
-        self.cold_max = cold_max
-        self.comfortable_min_temp = comfortable_min_temp
-        self.comfortable_max_temp = comfortable_max_temp
-        self.hot_min = hot_min
-        self.dry_max = dry_max
-        self.comfortable_min_humidity = comfortable_min_humidity
-        self.comfortable_max_humidity = comfortable_max_humidity
-        self.humid_min = humid_min
+        self.__cold_max = cold_max
+        self.__comfortable_min_temp = comfortable_min_temp
+        self.__comfortable_max_temp = comfortable_max_temp
+        self.__hot_min = hot_min
+        self.__dry_max = dry_max
+        self.__comfortable_min_humidity = comfortable_min_humidity
+        self.__comfortable_max_humidity = comfortable_max_humidity
+        self.__humid_min = humid_min
         self.comfortable_status = comfortable_status
         self.create_new_table = create_new_table
 
-    def check_context(self):
-        self.__check_humidity()
-        self.__check_temp()
+    def check_context(self, context):
+        self.__check_humidity(context)
+        self.__check_temp(context)
 
-    def __check_humidity(self):
-        if Context.humidity > self.humid_min:
-            Context.humidity_status = "too humid"
-        elif Context.humidity > self.comfortable_max_humidity:
-            Context.humidity_status = "humid"
-        elif Context.humidity < self.dry_max:
-            Context.humidity_status = "too dry"
-        elif Context.humidity < self.comfortable_min_humidity:
-            Context.humidity_status = "dry"
+    def __check_humidity(self, context):
+        if context.humidity > self.__humid_min:
+            context.humidity_status = "too humid"
+        elif context.humidity > self.__comfortable_max_humidity:
+            context.humidity_status = "humid"
+        elif context.humidity < self.__dry_max:
+            context.humidity_status = "too dry"
+        elif context.humidity < self.__comfortable_min_humidity:
+            context.humidity_status = "dry"
         else:
-            Context.humidity_status = "good"
+            context.humidity_status = "good"
 
-    def __check_temp(self):
-        if Context.temp > self.hot_min:
-            Context.temp_status = "too hot"
-        elif Context.temp > self.comfortable_max_temp:
-            Context.temp_status = "hot"
-        elif Context.temp < self.cold_max:
-            Context.temp_status = "too cold"
-        elif Context.temp < self.comfortable_min_temp:
-            Context.temp_status = "cold"
+    def __check_temp(self, context):
+        if context.temp > self.__hot_min:
+            context.temp_status = "too hot"
+        elif context.temp > self.__comfortable_max_temp:
+            context.temp_status = "hot"
+        elif context.temp < self.__cold_max:
+            context.temp_status = "too cold"
+        elif context.temp < self.__comfortable_min_temp:
+            context.temp_status = "cold"
         else:
             Context.temp_status = "good"
 
@@ -120,7 +122,7 @@ class Preference:
 
     @comfortable_status.setter
     def comfortable_status(self, comfortable_status):
-        self.comfortable_status = comfortable_status
+        self.__comfortable_status = comfortable_status
 
     @property
     def create_new_table(self):
@@ -128,7 +130,7 @@ class Preference:
 
     @create_new_table.setter
     def create_new_table(self, create_new_table):
-        self.create_new_table = create_new_table
+        self.__create_new_table = create_new_table
 
     @property
     def status_file_name(self):

@@ -7,19 +7,21 @@ from model.preference import Preference
 from model.database import Database
 from model.context import Context
 from monitorAndNotify import evaluate_context
-from model.util import Util
 
-def start_program():
+def start_read_and_display_program():
     global preference, context
+    preference = Preference()
     context = Context()
-    preference = Util.read_preference()
+    get_latest_context()
+    preference.check_context(context)
+    display_context()
 
 def get_latest_context():
     try:
         last_context = Database.select_a_record("temp, humidity", " ORDER BY timestamp DESC LIMIT 1")
         context.update_context(last_context[0], last_context[1])
     except:
-        print("Fail to get latest record from database")
+        PiSenseHat.show_message("Fail to get latest record from database")
         sys.exit()
 
 def display_temp():
@@ -38,10 +40,7 @@ def display_humidity():
     else:
         PiSenseHat.show_message(context.to_string_humidity(), gre)
 
-def read_display_db_record():
-    start_program()
-    get_latest_context()
-    preference.check_context()
+def display_context():
     end = time() + 40
     stop = False
     while time() < end and not stop:
@@ -53,4 +52,4 @@ def read_display_db_record():
 
 if __name__ == "__main__":
     evaluate_context()
-    read_display_db_record()
+    start_read_and_display_program() 

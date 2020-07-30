@@ -4,3 +4,12 @@ Humidity: 31.91 %, OK
 2020/12/2 13:52:53, OK
 Temperature: 25.07 Celsius, OK
 Humidity: 31.91 %, OK
+2020-07-30 23:46:15, BAD
+Temperature: 19.71 Celsius, OK
+Humidity is uncomfortably humid: 62.37 %, BAD
+2020-07-30 23:53:42, BAD
+Temperature: 22 Celsius, OK
+Humidity is uncomfortably dry: 30 %, BAD
+2020-07-30 23:53:42, BAD
+Temperature: 22.2 Celsius, OK
+Humidity is uncomfortably dry: 35 %, BAD

@@ -5,7 +5,6 @@ from termios import tcflush, TCIFLUSH
 from time import sleep
 
 class File:
-
     @staticmethod
     def read_json(file_name):
         json_file = open(pathlib.Path(__file__).parent.parent / "files" / file_name)
@@ -27,7 +26,7 @@ class File:
 
     @staticmethod
     def get_file_name():
-        print("Please provide input in 5 seconds! Hit Ctrl + C to start")
+        print("Please provide input in . seconds! Hit Ctrl + C to start")
         try:
             File.wait_for_start()
         except KeyboardInterrupt:
@@ -38,7 +37,7 @@ class File:
 
     @staticmethod
     def wait_for_start():
-        for i in range(0,5):
+        for i in range(0, 5):
             sleep(1) 
         print("No input is given. File name is as default")
 

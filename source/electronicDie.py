@@ -1,6 +1,8 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import time
 from model.senseHat import PiSenseHat
 from model.dice import Dice
-import time
 
 def roll_dice():
     Dice.roll_dice()

@@ -10,11 +10,14 @@ from model.util import Util
 
 def start_program():
     global preference, context
+    preference = Preference()
     context = Context()
-    preference = Util.read_preference()
+    get_latest_context()
+    preference.check_context(context)
+    record_data()
 
 def get_latest_context():
-    if not Preference.create_new_table:
+    if not preference.create_new_table:
         try:
             last_context = Database.select_a_record("*", " ORDER BY timestamp DESC LIMIT 1")
             context.update_context(last_context[1], last_context[2], last_context[0])
@@ -23,16 +26,14 @@ def get_latest_context():
             sys.exit()
     else:
         print("New table is not created. Please check config file and your database")
+        sys.exit()
 
 def record_data():
-    start_program()
-    get_latest_context()
-    preference.check_context()
     print("Input context report file name. Default name is report.csv")
-    File.write_csv(Util.get_file_name("report"), context.get_context_report_record())
+    File.write_csv(Util.get_csv_file_name("report"), context.get_context_report_record())
     print("last record reported")
 
 if __name__ == "__main__":
-    record_data()
+    start_program()
 
 

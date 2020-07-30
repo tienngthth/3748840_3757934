@@ -108,7 +108,8 @@ class Dice:
 
     @staticmethod
     def display_dice():
-        Dice.dice_value = randint(1, 6)
+        # Dice.dice_value = randint(1, 6)
+        Dice.dice_value = 6
         Dice.display()
 
     @staticmethod

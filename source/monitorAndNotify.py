@@ -12,7 +12,7 @@ from model.util import Util
 def start_program():
     global preference, context
     context = Context()
-    preference = Util.read_preference()
+    preference = Preference()
 
 def get_context_sense_hat():
     check_tb()
@@ -26,11 +26,11 @@ def check_tb():
             )
             preference.create_new_table = False
         except:
-            print("Fail to create new database table")
+            PushBullet.send_notification("From Raspberry Pi", "Fail to create new database table")
             sys.exit()
 
 def check_context():
-    preference.check_context()
+    preference.check_context(context)
     if context.temp_status != "good" or context.humidity_status != "good":
         noti_body = context.get_context_message()
         if context.temp_status.find("too") == -1 and context.humidity_status.find("too") == -1:
@@ -41,7 +41,7 @@ def check_context():
             PushBullet.send_notification("From Raspberry Pi", noti_body)
     
 def reset():
-    if (datetime.datetime.now().strftime("%H:%M") == "11:16"):
+    if (datetime.datetime.now().strftime("%H:%M") == "23:46"):
         if (preference.comfortable_status == True):
             push_last_noti()
         else:
@@ -60,8 +60,8 @@ def get_avg_temp():
             " WHERE timestamp >= date('now','-1 day')"
         ), 2))
     except:
-        print("Fail to get average temperature")
-        sys.exit()
+        PushBullet.send_notification("From Raspberry Pi", "Fail to get average temperature")
+        return 0.00
 
 def get_avg_humidity():
     try:
@@ -70,8 +70,8 @@ def get_avg_humidity():
             " WHERE timestamp >= date('now','-1 day')"
         ), 2))
     except:
-        print("Fail to get average humidity")
-        sys.exit()
+        PushBullet.send_notification("From Raspberry Pi", "Fail to get average humidity")
+        return 0.00
 
 def save_status():
     json_content = {

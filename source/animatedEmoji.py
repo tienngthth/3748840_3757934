@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from model.senseHat import PiSenseHat, bla, yel, whi, gre, blu, vio
 from model.senseHat import ora, dpu, pur, red, cre, bro, gol, gra
 from model.emoji import Emoji
