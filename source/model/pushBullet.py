@@ -6,10 +6,10 @@ class PushBullet:
     
     @staticmethod
     def send_notification(title, body, tokens = None):
-        if tokens != None:
-            PushBullet.tokens = tokens
+        if tokens == None:
+            tokens = PushBullet.tokens
         data_send = {"type": "note", "title": title, "body": body}
-        for token in PushBullet.tokens:
+        for token in tokens:
             resp = requests.post(
                 'https://api.pushbullet.com/v2/pushes',
                 data = json.dumps(data_send),

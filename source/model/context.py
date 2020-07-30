@@ -4,94 +4,80 @@ from .database import Database
 from .senseHat import PiSenseHat
 
 class Context:
-    timestamp = None
-    temp = None
-    humidity = None
-    temp_status = None
-    humidity_status = None
+    def __init__(self):
+        self.__timestamp = None
+        self.__temp = None
+        self.__humidity = None
+        self.__temp_status = None
+        self.__humidity_status = None
     
-    @staticmethod
-    def update_context(timestamp = None, temperature = None, humidity = None):
-        if humidity == None or temperature == None or timestamp == None:
-            Context.update_real_time()
-        else:
-            Context.temp = temperature
-            Context.humidity = humidity
-            Context.timestamp = timestamp
+    def update_context(self, timestamp, temperature, humidity, insert_to_db = False):
+        self.temp = temperature
+        self.humidity = humidity
+        self.timestamp = timestamp
+        if insert_to_db:
+            __log_data_to_db()
 
-    @staticmethod
-    def update_real_time():
+    def update_real_time_context(self):
         raw_data = PiSenseHat.get_context()
-        Context.humidity = round(raw_data[2], 2)
-        Context.temp = round(Context.correct_temp(raw_data), 2)
+        self.humidity = round(raw_data[2], 2)
+        self.temp = round(self.__correct_temp(raw_data), 2)
+        self.time = datetime.datetime.now().replace(microsecond=0)
+        self.log_data_to_db()
 
-    def set_context(context):
-        Context.time = datetime.datetime.now().replace(microsecond=0)
-        Context.temp = round(context[0], 2)
-        Context.humidity = round(context[1], 2)
-    
-    @staticmethod
-    def log_data_to_db(tb_name, values):
-        parameters = (Context.time, Context.temp, Context.humidity)
-        Database.insert_record(tb_name, values, parameters)
-        Context.timestamp = datetime.datetime.now().replace(microsecond=0) 
-
-    @staticmethod
-    def correct_temp(raw_data):
-        cpu_temp = Context.get_cpu_temp()
+    def __correct_temp(self, raw_data):
+        cpu_temp = self.__get_cpu_temp()
         temp = (raw_data[0] + raw_data[1]) / 2
         return temp - ((cpu_temp - temp) / 1.5)
 
-    @staticmethod
-    def get_cpu_temp():
+    def __get_cpu_temp(self):
         res = os.popen("vcgencmd measure_temp").readline()
         return float(res.replace("temp=","").replace("'C\n",""))
 
-    @staticmethod
-    def log_data_to_db():
-        parameters = (Context.timestamp, Context.temp, Context.humidity)
+    def __log_data_to_db(self):
+        parameters = (self.timestamp, self.temp, self.humidity)
         Database.insert_record("((?), (?), (?))", parameters)
 
-    @staticmethod
-    def get_context_report_record():        
-        return Context.get_overall_status() + "\n" + Context.get_context_message() + "\n"
+    def get_context_report_record(self):        
+        return self.__get_overall_status() + "\n" + self.get_context_message() + "\n"
 
-    @staticmethod
-    def get_overall_status():
-        if Context.temp_status != "good" or Context.humidity_status != "good":
-            return str(Context.timestamp) + ", BAD"
+    def __get_overall_status(self):
+        if self.temp_status != "good" or self.humidity_status != "good":
+            return str(self.timestamp) + ", BAD"
         else:
-            return str(Context.timestamp) + ", OK"
+            return str(self.timestamp) + ", OK"
 
-    @staticmethod
-    def get_context_message():
-        return Context.get_temp_message() + "\n" + Context.get_humidity_message()
+    def get_context_message(self):
+        return self.__get_temp_message() + "\n" + self.__get_humidity_message()
     
-    @staticmethod
-    def get_temp_message():
-        if (Context.temp_status != "good"):
-            if (Context.temp_status.find("too") != -1):
-                return "Temperature is dangerously {}: {} Celsius, BAD".format(Context.temp_status, Context.temp)
+    def __get_temp_message(self):
+        if (self.temp_status != "good"):
+            if (self.temp_status.find("too") != -1):
+                return "Temperature is dangerously {}: {} Celsius, BAD".format(self.temp_status, self.temp)
             else:
-                return "Temperature is uncomfortably {}: {} Celsius, BAD".format(Context.temp_status, Context.temp)
+                return "Temperature is uncomfortably {}: {} Celsius, BAD".format(self.temp_status, self.temp)
         else:
-            return Context.to_string_temp() + ", OK"
+            return self.to_string_temp() + ", OK"
 
-    @staticmethod
-    def get_humidity_message():
-        if (Context.humidity_status != "good"):
-            if (Context.humidity_status.find("too") != -1):
-                return "Humidity is dangerously {}: {} %, BAD".format(Context.humidity_status, Context.humidity)
+    def __get_humidity_message(self):
+        if (self.humidity_status != "good"):
+            if (self.humidity_status.find("too") != -1):
+                return "Humidity is dangerously {}: {} %, BAD".format(self.humidity_status, self.humidity)
             else:
-                return "Humidity is uncomfortably {}: {} %, BAD".format(Context.humidity_status, Context.humidity)
+                return "Humidity is uncomfortably {}: {} %, BAD".format(self.humidity_status, self.humidity)
         else:
-            return Context.to_string_humidity() + ", OK"
+            return self.to_string_humidity() + ", OK"
 
-    @staticmethod
-    def to_string_humidity():
-        return "Humidity: {} %".format(Context.humidity)
+    def to_string_humidity(self):
+        return "Humidity: {} %".format(self.humidity)
 
-    @staticmethod
-    def to_string_temp():
-        return "Temperature: {} Celsius".format(Context.temp)
+    def to_string_temp(self):
+        return "Temperature: {} Celsius".format(self.temp)
 
+    @property
+    def temp_status(self):
+        return self.__temp_status
+
+    @property
+    def humidity_status(self):
+        return self.__humidity_status

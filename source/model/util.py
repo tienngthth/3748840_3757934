@@ -8,8 +8,16 @@ class Util:
             return float_string.isdigit()
 
     @staticmethod
-    def get_file_name(default):
+    def get_csv_file_name(default):
+        return File.get_file_name() + ".csv"
+
+    @staticmethod
+    def get_json_file_name(default):
+        return File.get_file_name() + ".json"
+
+    @staticmethod
+    def get_file_name():
         file_name = File.get_file_name()
         if file_name == None:
             file_name = default
-        return file_name + ".csv"
+        return file_name

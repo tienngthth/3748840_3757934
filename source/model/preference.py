@@ -4,110 +4,136 @@ from .context import Context
 from .util import Util
 
 class Preference:
-    cold_max = None
-    comfortable_min_temp = None
-    comfortable_max_temp = None
-    hot_min = None
-    dry_max = None
-    comfortable_min_humidity = None
-    comfortable_max_humidity = None
-    humid_min = None
-    comfortable_status = None
-    create_new_table = None
+    def __init__(self, preference_file_name, status_file_name):
+        self.__cold_max = None
+        self.__comfortable_min_temp = None
+        self.__comfortable_max_temp = None
+        self.__hot_min = None
+        self.__dry_max = None
+        self.__comfortable_min_humidity = None
+        self.__comfortable_max_humidity = None
+        self.__humid_min = None
+        self.__comfortable_status = None
+        self.__create_new_table = None
+        self.__preference_file_name = preference_file_name
+        self.__status_file_name = status_file_name
+        self.read_preference()
 
-    @staticmethod
-    def read_preference():
-        config_json = File.read_json("config.json")
-        status_json = File.read_json("status.json")
-        Preference.parse_json(config_json, status_json)
+    def read_preference(self):
+        try:
+            preference_json = File.read_json(self.preference_file_name)
+            status_json = File.read_json(self.status_file_name)
+        except:
+            print("Preference or status file is missing or having wrong content format")
+            sys.exit()
+        self.__parse_json(preference_json, status_json)
 
-    @staticmethod
-    def parse_json(config_json, status_json):
-        Preference.validate_config_preference(config_json)
-        Preference.set_preference (
-            float(config_json["cold_max"]),
-            float(config_json["comfortable_min_temp"]),
-            float(config_json["comfortable_max_temp"]),
-            float(config_json["hot_min"]),
-            float(config_json["dry_max"]),
-            float(config_json["comfortable_min_humidity"]),
-            float(config_json["comfortable_max_humidity"]),
-            float(config_json["humid_min"]),
+    def __parse_json(self, preference_json, status_json):
+        self.__validate_preference_values(preference_json)
+        self.__validate_status_data(status_json)
+        self.__set_preference (
+            float(preference_json["cold_max"]),
+            float(preference_json["comfortable_min_temp"]),
+            float(preference_json["comfortable_max_temp"]),
+            float(preference_json["hot_min"]),
+            float(preference_json["dry_max"]),
+            float(preference_json["comfortable_min_humidity"]),
+            float(preference_json["comfortable_max_humidity"]),
+            float(preference_json["humid_min"]),
             status_json["comfortable_status"],
             status_json["create_new_table"]
     )
 
-    @staticmethod
-    def validate_config_preference(config_dict):
+    def __validate_status_values(self, statuses_dict):
+        for key, value in values_dict.items():
+            if type(value) is not bool:
+                print("Wrong " + key + " data type, invalid boolean")
+                sys.exit()
+
+    def __validate_preference_values(self, values_dict):
         values = []
-        for key, value in config_dict.items():
+        for key, value in values_dict.items():
             if not Util.check_float(str(value)):
-                print("Wrong " + key + " format - invalid number")
+                print("Wrong " + key + " data type, invalid number")
                 sys.exit()
             else:
                 values.append(value)
-        Preference.check_context_preference_value_order(values[:4])
-        Preference.check_context_preference_value_order(Values[4:])
+        self.__check_context_preference_value_order(values[:4])
+        self.__check_context_preference_value_order(Values[4:])
         
-    @staticmethod
-    def check_context_preference_value_order(values):
+    def __check_context_preference_value_order(self, values):
         for i in range(0, 3]):
             if values[i] > values[i + 1]:
-                print("Invalid context preference value order")
-                break
+                print("Invalid context preference values order")
                 sys.exit()
 
-    @staticmethod
-    def set_preference(
+    def __set_preference(
+        self, 
         cold_max, comfortable_min_temp, 
         comfortable_max_temp, hot_min, 
         dry_max, comfortable_min_humidity, 
         comfortable_max_humidity, humid_min, 
         comfortable_status, create_new_table
     ):
-        Preference.cold_max = cold_max
-        Preference.comfortable_min_temp = comfortable_min_temp
-        Preference.comfortable_max_temp = comfortable_max_temp
-        Preference.hot_min = hot_min
-        Preference.dry_max = dry_max
-        Preference.comfortable_min_humidity = comfortable_min_humidity
-        Preference.comfortable_max_humidity = comfortable_max_humidity
-        Preference.humid_min = humid_min
-        Preference.comfortable_status = comfortable_status
-        Preference.create_new_table = create_new_table
-               
+        self.cold_max = cold_max
+        self.comfortable_min_temp = comfortable_min_temp
+        self.comfortable_max_temp = comfortable_max_temp
+        self.hot_min = hot_min
+        self.dry_max = dry_max
+        self.comfortable_min_humidity = comfortable_min_humidity
+        self.comfortable_max_humidity = comfortable_max_humidity
+        self.humid_min = humid_min
+        self.comfortable_status = comfortable_status
+        self.create_new_table = create_new_table
 
-    @staticmethod
-    def set_comfortable_status(comfortable_status):
-        Preference.comfortable_status = comfortable_status
+    def check_context(self):
+        self.__check_humidity()
+        self.__check_temp()
 
-    @staticmethod
-    def check_context():
-        Preference.check_humidity()
-        Preference.check_temp()
-
-    @staticmethod
-    def check_humidity():
-        if Context.humidity > Preference.humid_min:
+    def __check_humidity(self):
+        if Context.humidity > self.humid_min:
             Context.humidity_status = "too humid"
-        elif Context.humidity > Preference.comfortable_max_humidity:
+        elif Context.humidity > self.comfortable_max_humidity:
             Context.humidity_status = "humid"
-        elif Context.humidity < Preference.dry_max:
+        elif Context.humidity < self.dry_max:
             Context.humidity_status = "too dry"
-        elif Context.humidity < Preference.comfortable_min_humidity:
+        elif Context.humidity < self.comfortable_min_humidity:
             Context.humidity_status = "dry"
         else:
             Context.humidity_status = "good"
 
-    @staticmethod
-    def check_temp():
-        if Context.temp > Preference.hot_min:
+    def __check_temp(self):
+        if Context.temp > self.hot_min:
             Context.temp_status = "too hot"
-        elif Context.temp > Preference.comfortable_max_temp:
+        elif Context.temp > self.comfortable_max_temp:
             Context.temp_status = "hot"
-        elif Context.temp < Preference.cold_max:
+        elif Context.temp < self.cold_max:
             Context.temp_status = "too cold"
-        elif Context.temp < Preference.comfortable_min_temp:
+        elif Context.temp < self.comfortable_min_temp:
             Context.temp_status = "cold"
         else:
             Context.temp_status = "good"
+
+      @property
+    def timestamp(self):
+        return self.__timestamp
+
+    @property
+    def comfortable_status(self):
+        return self.__comfortable_status
+
+    @comfortable_status.setter
+    def comfortable_status(self, comfortable_status):
+        self.comfortable_status = comfortable_status
+
+    @property
+    def create_new_table(self):
+        return self.__create_new_table
+
+    @create_new_table.setter
+    def create_new_table(self, create_new_table):
+        self.create_new_table = create_new_table
+
+    @property
+    def status_file_name(self):
+        return self.__status_file_name
