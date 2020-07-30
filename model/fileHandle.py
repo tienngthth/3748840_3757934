@@ -1,5 +1,8 @@
 import json
+import sys
 import pathlib
+from time import sleep
+from termios import tcflush, TCIFLUSH
 
 class File:
 
@@ -21,3 +24,14 @@ class File:
         csv_file = open(pathlib.Path(__file__).parent.parent / "files" /  file_name, "a")
         csv_file.write(file_content)
         csv_file.close()
+
+    @staticmethod
+    def get_file_name():
+        print('Please provide input in 20 seconds! Hit Ctrl + C to start')
+        try:
+            for i in range(0,5):
+                sleep(1) 
+            print('No input is given. File name is as default')
+        except KeyboardInterrupt:
+            tcflush(sys.stdin, TCIFLUSH)
+            return input('Input file name: ')

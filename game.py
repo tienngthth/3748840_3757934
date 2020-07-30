@@ -1,5 +1,6 @@
 from model.player import Player
 from model.dice import Dice
+from model.File import File
 from model.senseHat import PiSenseHat
 
 def find_first_player(player_1, player_2):
@@ -14,7 +15,15 @@ def play_game(players_order):
         for player in players_order:
             if player.play():
                 return player.get_name()
-                
+
+def announce_report_winner():
+
+ def get_file_name():
+    file_name = File.get_file_name()
+    if file_name == None:
+        file_name = "report.csv"
+    return file_name
+              
 def main():
     player_1 = Player("1")
     player_2 = Player("2")

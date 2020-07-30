@@ -12,9 +12,18 @@ I means set the system to 11pm then that is the last data you will record per da
 """
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from time import sleep
 from model.fileHandle import File
-from model.context import Context
+# from model.context import Context
+
+def get_file_name():
+    file_name = File.get_file_name()
+    if file_name == None:
+        file_name = "report.csv"
+    return file_name
 
 def record_data():
-    File.write_csv("report.csv", Context.get_context_report_record())
+    File.write_csv(get_file_name(), Context.get_context_report_record())
     print("last record reported")
+
+get_file_name()
