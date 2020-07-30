@@ -1,14 +1,21 @@
+import sys]
 import bluetooth
 
-class Client:
+class Client_socket:
+   sock=bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 
-    bd_addr = "DC:A6:32:4A:0C:41"
+   def __init__(bluetooth_address, port):
+      self.port = port
+      self.bluetooth_address = bluetooth_address
 
-    port = 1
+   def open_socket():
+      sock.connect((bd_addr, port))
 
-    sock=bluetooth.BluetoothSocket( bluetooth.RFCOMM )
-    sock.connect((bd_addr, port))
+   def send_message(message)
+      sock.send(message)
 
-    sock.send("hello!!")
+   def receive_message()
+      return sock.recv(1024).decode('UTF-8')
 
-    sock.close()
+   def close_socket():
+      sock.close()
