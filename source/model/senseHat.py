@@ -38,7 +38,6 @@ class PiSenseHat:
     def show_message(message, colour = whi, speed = 0.08):
         PiSenseHat.sense.clear()
         PiSenseHat.sense.show_message(message, text_colour = colour, scroll_speed = speed)
-        # PiSenseHat.sense.show_message("AA", text_colour = colour)
         
     @staticmethod
     def show_letter(letter, colour = whi):
