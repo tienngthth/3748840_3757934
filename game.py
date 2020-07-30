@@ -20,13 +20,17 @@ def play_game(players_order):
         for player in players_order:
             if player.play():
                 return player.get_name()
-                
+            else:
+                PiSenseHat.show_message("P" + self.__name + ": " + str(self.__score.get_score()), blu, 0.045)
+
+def end_game(winner):
+    PiSenseHat.show_message("Congratz P" + self.__name)
+
 def main():
     global players_order
     player_1 = Player("1")
     player_2 = Player("2")
-    winner = play_game(find_first_player(player_1, player_2))
-    print(winner)
+    end_game(play_game(find_first_player(player_1, player_2)))
 
 if __name__ == "__main__":
     main()

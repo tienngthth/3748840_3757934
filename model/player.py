@@ -28,9 +28,8 @@ class Player:
     def __update_score(self):
         if self.__score.update_score(self.__dice_value):
             self.__winner = True
-            PiSenseHat.show_message("Congratz P" + self.__name)
         else:
-            PiSenseHat.show_message("P" + self.__name + ": " + str(self.__score.get_score()), blu, 0.045)
+            
 
     def get_name(self):
         return self.__name
