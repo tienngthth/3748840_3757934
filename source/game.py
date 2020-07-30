@@ -1,6 +1,8 @@
+import datetime
 from model.player import Player
 from model.dice import Dice
-from model.senseHat import PiSenseHat
+from model.senseHat import PiSenseHat, ora
+from model.util import Util
 from electronicDice import roll_dice
 
 def find_first_player(player_1, player_2):
@@ -19,12 +21,14 @@ def play_game(players_order):
     while True:
         for player in players_order:
             if player.play():
-                return player.get_name()
+                return "Player " + player.get_name() + "wins the game with " +  str(player.get_score()) + " scores"
             else:
-                PiSenseHat.show_message("P" + player.get_name() + ": " + str(player.get_score()), blu, 0.045)
+                PiSenseHat.show_message("P" + player.get_name() + ": " + str(player.get_score()), blu, 0.06)
 
-def end_game(winner):
-    PiSenseHat.show_message("Congratz P" + winner)
+def end_game(winning_info):
+    PiSenseHat.show_message("Congratz!!!" + winning_info, ora, 0.06)
+    record = datetime.datetime.now().replace(microsecond = 0) + ": " + winning_info
+    File.write_csv(Util.get_file_name("winner"), record)
 
 def main():
     global players_order
