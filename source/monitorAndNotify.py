@@ -9,10 +9,12 @@ from model.database import Database
 from model.fileHandle import File
 from model.util import Util
 
-def start_program():
+def start_evaluating_context():
     global preference, context
-    context = Context()
     preference = Preference()
+    context = Context()
+    get_context_sense_hat()
+    check_context()
 
 def get_context_sense_hat():
     check_tb()
@@ -81,8 +83,6 @@ def save_status():
     File.write_json(preference.status_file_name, json_content)
 
 def evaluate_context():
-    start_program()
-    get_context_sense_hat()
-    check_context()
+    start_evaluating_context()
     reset()
     save_status()

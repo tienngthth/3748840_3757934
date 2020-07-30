@@ -151,7 +151,7 @@ cat_pixels = (
     cat_pixels_3, cat_pixels_4
 )
     
-def main():
+def start_displaying_emoji():
     emojis = [Emoji(rainbow_mouth_pixels), Emoji(sword_pixels), Emoji(cat_pixels)]
     stop = False
     while not stop:
@@ -161,4 +161,4 @@ def main():
             stop = True
 
 if __name__ == "__main__": 
-    main()
+    start_displaying_emoji()

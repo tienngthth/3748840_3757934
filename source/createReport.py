@@ -8,7 +8,7 @@ from model.database import Database
 from model.preference import Preference
 from model.util import Util
 
-def start_program():
+def start_creating_report():
     global preference, context
     preference = Preference()
     context = Context()
@@ -30,10 +30,10 @@ def get_latest_context():
 
 def record_data():
     print("Input context report file name. Default name is report.csv")
-    File.write_csv(Util.get_csv_file_name("report"), context.get_context_report_record())
+    File.write_csv(Util.get_file_name("report", ".csv"), context.get_context_report_record())
     print("last record reported")
 
 if __name__ == "__main__":
-    start_program()
+    start_creating_report()
 
 

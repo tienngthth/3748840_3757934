@@ -32,7 +32,7 @@ def end_game(winning_info):
     PiSenseHat.show_message("Congratz!! " + winning_info, ora, 0.06)
     record = str(datetime.datetime.now().replace(microsecond = 0)) + ": " + winning_info + "\n"
     print("Input game winner report file name. Default name is winner.csv")
-    File.write_csv(Util.get_csv_file_name("winner"), record)
+    File.write_csv(Util.get_file_name("winner", ".csv"), record)
 
 def start_game():
     player_1 = Player("1")

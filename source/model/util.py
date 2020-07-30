@@ -9,18 +9,10 @@ class Util:
             return float_string.isdigit()
 
     @staticmethod
-    def get_csv_file_name(default_name):
-        return Util.get_file_name(default_name) + ".csv"
-
-    @staticmethod
-    def get_json_file_name(default_name):
-        return Util.get_file_name(default_name) + ".json"
-
-    @staticmethod
-    def get_file_name(default_name):
+    def get_file_name(default_name, extension):
         file_name = File.get_file_name()
         if file_name == None:
             file_name = default_name
-        return file_name
+        return file_name + extension
 
    
