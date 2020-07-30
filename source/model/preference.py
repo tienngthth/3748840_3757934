@@ -39,11 +39,24 @@ class Preference:
 
     @staticmethod
     def validate_config_preference(config_dict):
+        values = []
         for key, value in config_dict.items():
             if not Util.check_float(str(value)):
                 print("Wrong " + key + " format - invalid number")
                 sys.exit()
-            
+            else:
+                values.append(value)
+        Preference.check_context_preference_value_order(values[:4])
+        Preference.check_context_preference_value_order(Values[4:])
+        
+    @staticmethod
+    def check_context_preference_value_order(values):
+        for i in range(0, 3]):
+            if values[i] > values[i + 1]:
+                print("Invalid context preference value order")
+                break
+                sys.exit()
+
     @staticmethod
     def set_preference(
         cold_max, comfortable_min_temp, 

@@ -27,7 +27,7 @@ class File:
 
     @staticmethod
     def get_file_name():
-        print("Please provide input in 10 seconds! Hit Ctrl + C to start")
+        print("Please provide input in 5 seconds! Hit Ctrl + C to start")
         try:
             File.wait_for_start()
         except KeyboardInterrupt:
