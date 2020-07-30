@@ -24,6 +24,16 @@ class Context:
         raw_data = PiSenseHat.get_context()
         Context.humidity = round(raw_data[2], 2)
         Context.temp = round(Context.get_temp(raw_data), 2)
+
+    def set_context(context):
+        Context.time = datetime.datetime.now().replace(microsecond=0)
+        Context.temp = round(context[0], 2)
+        Context.humidity = round(context[1], 2)
+    
+    @staticmethod
+    def log_data_to_db(tb_name, values):
+        parameters = (Context.time, Context.temp, Context.humidity)
+        Database.insert_record(tb_name, values, parameters)
         Context.timestamp = datetime.datetime.now().replace(microsecond=0) 
 
     @staticmethod
@@ -84,3 +94,4 @@ class Context:
     @staticmethod
     def to_string_temp():
         return "Temperature: {} Celsius".format(Context.temp)
+

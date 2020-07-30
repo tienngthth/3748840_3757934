@@ -4,17 +4,17 @@ import datetime
 import sys
 from model.preference import Preference
 from model.context import Context
+from model.senseHat import PiSenseHat
 from model.pushBullet import PushBullet
 from model.database import Database
 from model.fileHandle import File
-from model.context import Context
 
 def read_preference():
-    # try:
-    Preference.read_preference()
-    # except:
-    #     PushBullet.send_notification("From Raspberry Pi", "Fail to read files")
-    #     sys.exit()
+    try:
+        Preference.read_preference()
+    except:
+        PushBullet.send_notification("From Raspberry Pi", "Fail to read files")
+        sys.exit()
 
 def reset():
     if (datetime.datetime.now().strftime("%H:%M") == "11:16"):
