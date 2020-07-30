@@ -13,15 +13,6 @@ def get_latest_context():
     Context.temp = row[0]
     Context.humidity = row[1]
 
-<<<<<<< HEAD
-def set_sense_hat():
-    if Preference.check_comfortable(temp) == "cold":
-        PiSenseHat.show_message(str(temp) + " Celsius", blu)
-    elif Preference.check_comfortable(temp) == "hot":
-        PiSenseHat.show_message(str(temp) + " Celsius", red)
-    else:
-        PiSenseHat.show_message(str(temp) + " Celsius", gre)
-=======
 def display_temp():
     if (Context.temp_status.find("cold")):
         PiSenseHat.show_message(Context.to_string_temp, red)
@@ -37,7 +28,6 @@ def display_humidity():
         PiSenseHat.show_message(Context.to_string_humidity, red)
     else:
         PiSenseHat.show_message(Context.to_string_humidity, gre)
->>>>>>> context
 
 def main():
     evaluate_context()
@@ -46,12 +36,8 @@ def main():
     end = time() + 52
     stop = False
     while time() < end and not stop:
-<<<<<<< HEAD
-        set_sense_hat()
-=======
         display_temp()
         display_humidity()
->>>>>>> context
         if PiSenseHat.detect_stick():
             stop = True
     PiSenseHat.show_letter("*")

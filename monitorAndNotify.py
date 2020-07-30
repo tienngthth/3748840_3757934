@@ -4,18 +4,11 @@ import datetime
 import sys
 from model.preference import Preference
 from model.context import Context
-<<<<<<< HEAD
-from model.senseHat import PiSenseHat
-from model.pushBullet import PushBullet
-from model.database import Database
-from model.fileHandle import File
-=======
 from model.pushBullet import PushBullet
 from model.database import Database
 from model.fileHandle import File
 from model.context import Context
 from createReport import record_data
->>>>>>> context
 
 def read_preference():
     try:
@@ -54,14 +47,8 @@ def get_avg_humidity():
     return str(value)
 
 def get_context_sense_hat():
-<<<<<<< HEAD
-    Context.set_context(PiSenseHat.get_data()[0:2])
-    check_tb()
-    Context.log_data_to_db("SENSEHAT_data", "((?), (?), (?))")
-=======
     check_tb()
     Context.update_context()  
->>>>>>> context
 
 def check_tb():
     if Preference.create_new_table == "True":
