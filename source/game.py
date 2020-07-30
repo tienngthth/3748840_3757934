@@ -19,13 +19,12 @@ def play_game(players_order):
     while True:
         for player in players_order:
             if player.play():
-                end_record()
                 return player.get_name()
             else:
-                PiSenseHat.show_message("P" + self.__name + ": " + str(self.__score.get_score()), blu, 0.045)
+                PiSenseHat.show_message("P" + player.get_name() + ": " + str(player.get_score()), blu, 0.045)
 
 def end_game(winner):
-    PiSenseHat.show_message("Congratz P" + self.__name)
+    PiSenseHat.show_message("Congratz P" + winner)
 
 def main():
     global players_order

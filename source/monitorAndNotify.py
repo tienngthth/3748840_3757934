@@ -4,7 +4,6 @@ import datetime
 import sys
 from model.preference import Preference
 from model.context import Context
-from model.senseHat import PiSenseHat
 from model.pushBullet import PushBullet
 from model.database import Database
 from model.fileHandle import File

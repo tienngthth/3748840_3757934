@@ -23,7 +23,7 @@ class Context:
     def update_real_time():
         raw_data = PiSenseHat.get_context()
         Context.humidity = round(raw_data[2], 2)
-        Context.temp = round(Context.get_temp(raw_data), 2)
+        Context.temp = round(Context.correct_temp(raw_data), 2)
 
     def set_context(context):
         Context.time = datetime.datetime.now().replace(microsecond=0)
@@ -37,7 +37,7 @@ class Context:
         Context.timestamp = datetime.datetime.now().replace(microsecond=0) 
 
     @staticmethod
-    def get_temp(raw_data):
+    def correct_temp(raw_data):
         cpu_temp = Context.get_cpu_temp()
         temp = (raw_data[0] + raw_data[1]) / 2
         return temp - ((cpu_temp - temp) / 1.5)
