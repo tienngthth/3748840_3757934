@@ -1,11 +1,21 @@
 import bluetooth
+import socket
+from .util import Util
 
 class Server:
-    def __init__(self, host, port):
+    def __init__(self, host = '', port = 5):
         self.__socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-        self.__socket.bind((host, port))
-        self.__socket.listen(1)
+        self.__set_up_connection(host, port)
         self.__connection = None
+
+    def __set_up_connection(self, host, port):
+        # try:
+        # self.__socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 5)
+        self.__socket.bind((host, port))
+        # except:
+            # Util.raise_error("This port is occupied. Please try with another port") 
+        self.__socket.listen(1) 
+        print("Listenning...")  
 
     def accept_connection(self):
         self.__connection, addr = self.__socket.accept()

@@ -1,16 +1,15 @@
-import sys
 import bluetooth
-import time
+from time import sleep
 from .util import Util
 
-class ClientSocket:
+class Client:
 
-   def __init__(self, server_name, server_mac_address = None, port = 2):
+   def __init__(self, server_name, server_mac_address = None, port = 5):
       self.__port = port
       self.__find_server(server_name, server_mac_address)
       self.__socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 
-   def __find_server(server_name, server_mac_address):
+   def __find_server(self, server_name, server_mac_address):
       if server_mac_address is None and server_name is None:
          Util.raise_error("Please input server name or server mac address")
       if server_mac_address is not None and server_name is not None:
@@ -23,7 +22,7 @@ class ClientSocket:
    # Search for device based on device's name
    def search(self, server_name):
       for i in (0, 5):
-         time.sleep(3) #Sleep three seconds 
+         sleep(3) #Sleep three seconds 
          nearby_devices = bluetooth.discover_devices()
 
          for server_mac_address in nearby_devices:
