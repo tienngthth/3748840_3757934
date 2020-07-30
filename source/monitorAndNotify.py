@@ -7,14 +7,12 @@ from model.context import Context
 from model.pushBullet import PushBullet
 from model.database import Database
 from model.fileHandle import File
+from model.util import Util
 
-context = Context()
-
-def read_preference():
-    global preference
-    preference_file_name = Util.get_json_file_name("config")
-    status_file_name = Util.get_json_file_name("status")
-    preference = Preference(preference_file_name, status_file_name)
+def start_program():
+    global preference, context
+    context = Context()
+    preference = Util.read_preference()
 
 def get_context_sense_hat():
     check_tb()
@@ -28,20 +26,8 @@ def check_tb():
             )
             preference.create_new_table = False
         except:
-            PushBullet.send_notification("From Raspberry Pi", "Fail to create database table")
+            print("Fail to create new database table")
             sys.exit()
-
-def get_avg_temp():
-    return str(round(Database.execute_equation(
-        "AVG(temp)",
-        " WHERE timestamp >= date('now','-1 day')"
-    ), 2))
-
-def get_avg_humidity():
-    return str(round(Database.execute_equation(
-        "AVG(humidity)",
-        " WHERE timestamp >= date('now','-1 day')"
-    ), 2))
 
 def check_context():
     preference.check_context()
@@ -60,22 +46,43 @@ def reset():
             push_last_noti()
         else:
             preference.comfortable_status = True
-    
+
 def push_last_noti():
     noti_body = "Average temperature of the day: " + get_avg_temp() + " Celsius"
     noti_body += "\nAverage humidity of the day: " + get_avg_humidity() + " %"
     noti_body += "\nSee you tomorrow! Good night"
     PushBullet.send_notification("From Raspberry Pi", noti_body)
 
+def get_avg_temp():
+    try:
+        return str(round(Database.execute_equation(
+            "AVG(temp)",
+            " WHERE timestamp >= date('now','-1 day')"
+        ), 2))
+    except:
+        print("Fail to get average temperature")
+        sys.exit()
+
+def get_avg_humidity():
+    try:
+        return str(round(Database.execute_equation(
+            "AVG(humidity)",
+            " WHERE timestamp >= date('now','-1 day')"
+        ), 2))
+    except:
+        print("Fail to get average humidity")
+        sys.exit()
+
 def save_status():
     json_content = {
-            "comfortable_status" : preference.comfortable_status,
-            "create_new_table" : preference.create_new_table
+        "comfortable_status" : preference.comfortable_status,
+        "create_new_table" : preference.create_new_table
     }
     File.write_json(preference.status_file_name, json_content)
 
 def evaluate_context():
-    read_preference()
+    start_program()
     get_context_sense_hat()
     check_context()
     reset()
+    save_status()

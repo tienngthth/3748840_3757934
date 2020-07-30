@@ -1,5 +1,6 @@
 import requests
 import json
+import sys
 
 class PushBullet:
     tokens = ("o.FrPitNnEo4UJXz941zfjmUKNxKv9bGQj", "o.JFcEzPeGuu4QDrahlJVunGgV0ZkL57rE")
@@ -20,6 +21,7 @@ class PushBullet:
                 }
             )
             if resp.status_code != 200:
-                raise Exception('something wrong')
+                print("Can not send push bullet")
+                sys.exit() 
             else:
-                print('complete sending')
+                print("complete sending")

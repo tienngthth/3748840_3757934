@@ -21,16 +21,16 @@ class Preference:
 
     def read_preference(self):
         try:
-            preference_json = File.read_json(self.preference_file_name)
-            status_json = File.read_json(self.status_file_name)
+            preference_json = File.read_json(self.__preference_file_name)
+            status_json = File.read_json(self.__status_file_name)
         except:
-            print("Preference or status file is missing or having wrong content format")
+            print("Preference or status file is missing or having wrong content format, invalid json format")
             sys.exit()
         self.__parse_json(preference_json, status_json)
 
     def __parse_json(self, preference_json, status_json):
         self.__validate_preference_values(preference_json)
-        self.__validate_status_data(status_json)
+        self.__validate_status_values(status_json)
         self.__set_preference (
             float(preference_json["cold_max"]),
             float(preference_json["comfortable_min_temp"]),
@@ -44,25 +44,25 @@ class Preference:
             status_json["create_new_table"]
     )
 
-    def __validate_status_values(self, statuses_dict):
-        for key, value in values_dict.items():
+    def __validate_status_values(self, status_dict):
+        for key, value in status_dict.items():
             if type(value) is not bool:
                 print("Wrong " + key + " data type, invalid boolean")
                 sys.exit()
 
-    def __validate_preference_values(self, values_dict):
+    def __validate_preference_values(self, preference_value_dict):
         values = []
-        for key, value in values_dict.items():
+        for key, value in preference_value_dict.items():
             if not Util.check_float(str(value)):
                 print("Wrong " + key + " data type, invalid number")
                 sys.exit()
             else:
                 values.append(value)
         self.__check_context_preference_value_order(values[:4])
-        self.__check_context_preference_value_order(Values[4:])
+        self.__check_context_preference_value_order(values[4:])
         
     def __check_context_preference_value_order(self, values):
-        for i in range(0, 3]):
+        for i in range(0,3):
             if values[i] > values[i + 1]:
                 print("Invalid context preference values order")
                 sys.exit()
@@ -113,10 +113,6 @@ class Preference:
             Context.temp_status = "cold"
         else:
             Context.temp_status = "good"
-
-      @property
-    def timestamp(self):
-        return self.__timestamp
 
     @property
     def comfortable_status(self):

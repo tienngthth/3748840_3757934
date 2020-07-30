@@ -3,7 +3,6 @@
 from flask import Flask, request, jsonify
 from model.database import Database
 from model.context import Context
-from model.pushBullet import PushBullet
 from model.util import Util
 
 app = Flask(__name__)
@@ -29,11 +28,11 @@ def upload_context():
     try:
         temp = request.json['temp']
         humidity = request.json['humidity']
-        if check_float(str(temp)) and check_float(str(humidity)):
-            Context.update_context(temp, humidity)
+        if Util.check_float(str(temp)) and Util.check_float(str(humidity)):
+            Context().update_context(temp, humidity, None, True)
             return "Successfully upload new context"
         else:
-            return "Wrong temperture or humidity format"
+            return "Wrong temperture or humidity format, invalid number"
     except:
         return "Fail to create new context"
 
@@ -44,11 +43,11 @@ def update_context():
 def update_temp():
     try:
         temp = request.json['temp']
-        if check_float(str(temp)):
+        if Util.check_float(str(temp)):
             Database.update_last_record("temp", (temp,))
             return "Successfully update temperature"
         else:
-            return "Wrong temperture format"
+            return "Wrong temperture format, invalid number"
     except:
         return "Fail to update temperature"
 
@@ -59,7 +58,7 @@ def update_humidity():
             Database.update_last_record("humidity", (humidity,))
             return "Successfully update humidity"
         else:
-            return "Wrong humidity format"
+            return "Wrong humidity format, invalid number"
     except:
         return "Fail to update humidity"
 

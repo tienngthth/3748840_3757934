@@ -1,5 +1,6 @@
 import datetime
 import os
+import sys
 from .database import Database
 from .senseHat import PiSenseHat
 
@@ -11,19 +12,22 @@ class Context:
         self.__temp_status = None
         self.__humidity_status = None
     
-    def update_context(self, timestamp, temperature, humidity, insert_to_db = False):
+    def update_context(self, temperature, humidity, timestamp = None, insert_to_db = False):
+        if timestamp is None:
+            timestamp = datetime.datetime.now().replace(microsecond=0)
+        self.timestamp = timestamp
         self.temp = temperature
         self.humidity = humidity
-        self.timestamp = timestamp
         if insert_to_db:
-            __log_data_to_db()
+            self.__log_data_to_db()
 
-    def update_real_time_context(self):
+    def update_real_time_context(self, insert_to_db = True):
         raw_data = PiSenseHat.get_context()
         self.humidity = round(raw_data[2], 2)
         self.temp = round(self.__correct_temp(raw_data), 2)
         self.time = datetime.datetime.now().replace(microsecond=0)
-        self.log_data_to_db()
+        if insert_to_db:
+           self.__log_data_to_db()
 
     def __correct_temp(self, raw_data):
         cpu_temp = self.__get_cpu_temp()
@@ -35,8 +39,12 @@ class Context:
         return float(res.replace("temp=","").replace("'C\n",""))
 
     def __log_data_to_db(self):
-        parameters = (self.timestamp, self.temp, self.humidity)
-        Database.insert_record("((?), (?), (?))", parameters)
+        try:
+            parameters = (self.timestamp, self.temp, self.humidity)
+            Database.insert_record("((?), (?), (?))", parameters)
+        except:
+            print("Unable to log data to database")
+            sys.exit()
 
     def get_context_report_record(self):        
         return self.__get_overall_status() + "\n" + self.get_context_message() + "\n"
