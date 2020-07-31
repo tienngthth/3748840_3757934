@@ -1,14 +1,8 @@
-import json
-import bluetooth
-import datetime
-import sys
-from time import sleep
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from model.client import Client
 from model.server import Server
 from model.context import Context
-
-sense = SenseHat()
-connect_status = False
 
 def evaluate_current_context():
     global preference, context
@@ -17,7 +11,7 @@ def evaluate_current_context():
     send_current_context()
     while True:
         sticks = PiSenseHat.detect_sticks()
-        if sticks > 1
+        if sticks > 1:
             server.send_message("Bye bye bye Pikatu")
             break
         else:
@@ -30,7 +24,7 @@ def send_current_context():
 
 def run_server():
     global server
-    server = Server(host = '', port = 2)
+    server = Server()
     server.accept_connection()
     evaluate_current_context()
 
@@ -42,9 +36,16 @@ def run_client():
         if client.retrieve_message.find("Bye") != -1:
             break
 
+def set_up_role():
+    role = input("This pi is a (client/server): ")
+    while role != "client" and role != "server":
+        print("Invalid role input")
+        role = input("This pi is a (client/server): ")
+    return role
+
 def start_connecting():
-    pi = input("This pi is a (client/server): ")
-    if pi == "client":
+    role = set_up_role()
+    if role == "client":
         run_client()
         client.close_socket()
     else:
