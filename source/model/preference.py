@@ -33,31 +33,36 @@ class Preference:
     def __parse_json(self, config_json, status_json):
         self.__validate_config_values(config_json)
         self.__validate_status_values(status_json)
-        self.__set_preference (
-            float(config_json["cold_max"]),
-            float(config_json["comfortable_min_temp"]),
-            float(config_json["comfortable_max_temp"]),
-            float(config_json["hot_min"]),
-            float(config_json["dry_max"]),
-            float(config_json["comfortable_min_humidity"]),
-            float(config_json["comfortable_max_humidity"]),
-            float(config_json["humid_min"]),
-            status_json["comfortable_status"],
-            status_json["create_new_table"]
-    )
+        try:
+            self.__set_preference (
+                float(config_json["cold_max"]),
+                float(config_json["comfortable_min_temp"]),
+                float(config_json["comfortable_max_temp"]),
+                float(config_json["hot_min"]),
+                float(config_json["dry_max"]),
+                float(config_json["comfortable_min_humidity"]),
+                float(config_json["comfortable_max_humidity"]),
+                float(config_json["humid_min"]),
+                status_json["comfortable_status"],
+                status_json["create_new_table"]
+            )
+        except:
+            PushBullet.raise_error("From Raspberry Pi", "Missing required values in config.json or status.json file")
 
     def __validate_status_values(self, status_dict):
+        if len(status_dict) != 2:
+            PushBullet.raise_error("From Raspberry Pi", "Wrong number of values in status.json")
         for key, value in status_dict.items():
             if type(value) is not bool:
-                PushBullet.send_notification("From Raspberry Pi", "Wrong " + key + " data type, invalid boolean")
-                sys.exit()
+                PushBullet.raise_error("From Raspberry Pi", "Wrong " + key + " data type, invalid boolean")
 
     def __validate_config_values(self, config_dict):
         values = []
+        if len(config_dict) != 8:
+            PushBullet.raise_error("From Raspberry Pi", "Wrong number of values in config.json")
         for key, value in config_dict.items():
             if not Util.check_float(str(value)):
-                PushBullet.send_notification("From Raspberry Pi", "Wrong " + key + " data type, invalid number")
-                sys.exit()
+                PushBullet.raise_error("From Raspberry Pi", "Wrong " + key + " data type, invalid number")
             else:
                 values.append(value)
         self.__check_cconfig_value_order(values[:4])
@@ -66,8 +71,7 @@ class Preference:
     def __check_cconfig_value_order(self, values):
         for i in range(0,3):
             if values[i] > values[i + 1]:
-                PushBullet.send_notification("From Raspberry Pi", "Invalid context preference values order")
-                sys.exit()
+                PushBullet.raise_error("From Raspberry Pi", "Invalid context preference values order")
 
     def __set_preference(
         self, 

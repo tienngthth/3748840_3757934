@@ -157,7 +157,7 @@ def start_displaying_emoji():
     while not stop:
         for emoji in emojis:
             emoji.display()
-        if (PiSenseHat.detect_stick()):
+        if PiSenseHat.detect_stick():
             stop = True
 
 if __name__ == "__main__": 

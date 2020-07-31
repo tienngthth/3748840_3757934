@@ -6,7 +6,7 @@ from createReport import start_creating_report
 
 def test_get_api():
     resp = requests.get('http://127.0.0.1:8080/get/newest/context')
-    if resp.status_code != 200:
+    if str(resp.content).find("Fail") != -1:
         print(resp.content)
     else:
         print(resp.json())
@@ -25,7 +25,7 @@ def test_upload_api():
     test_get_api()
 
 def test_update_api():
-    data_send = {"temp": "22.2", "humidity": 35}
+    data_send = {"humidity": 35}
     resp = requests.put(
         'http://127.0.0.1:8080/update/newest/context',
         data = json.dumps(data_send),

@@ -35,7 +35,7 @@ class PiSenseHat:
         return (temp_humidity, temp_pressure, humidity)
 
     @staticmethod
-    def show_message(message, colour = whi, speed = 0.08):
+    def show_message(message, colour = whi, speed = 0.065):
         PiSenseHat.sense.clear()
         PiSenseHat.sense.show_message(message, text_colour = colour, scroll_speed = speed)
         
@@ -50,6 +50,14 @@ class PiSenseHat:
             if event.action == "pressed":
                 return True
         return False
+
+    @staticmethod
+    def detect_sticks():
+        count = 0
+        for event in PiSenseHat.sense.stick.get_events():
+            if event.action == "pressed":
+                count += 1
+        return count
 
     @staticmethod
     def get_accelerometer(): 

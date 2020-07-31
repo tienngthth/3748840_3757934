@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import sys
 from time import time
 from model.senseHat import PiSenseHat, blu, gre, red, whi
 from model.preference import Preference
@@ -21,8 +20,7 @@ def get_latest_context():
         last_context = Database.select_a_record("temp, humidity", " ORDER BY timestamp DESC LIMIT 1")
         context.update_context(last_context[0], last_context[1])
     except:
-        PiSenseHat.show_message("Fail to get latest record from database")
-        sys.exit()
+        PiSenseHat.raise_error("Fail to get latest record from database")
 
 def display_temp():
     if context.temp_status.find("cold") != -1:

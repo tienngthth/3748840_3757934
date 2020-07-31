@@ -1,6 +1,7 @@
 import requests
 import json
 import sys
+from .util import Util
 
 class PushBullet:
     tokens = ("o.FrPitNnEo4UJXz941zfjmUKNxKv9bGQj", "o.JFcEzPeGuu4QDrahlJVunGgV0ZkL57rE")
@@ -21,7 +22,9 @@ class PushBullet:
                 }
             )
             if resp.status_code != 200:
-                print("Can not send push bullet")
-                sys.exit() 
-            else:
-                print("complete sending")
+                Util.raise_error("Fail to send push bullet")
+
+    @staticmethod
+    def raise_error(title, body, tokens = None):
+        PushBullet.send_notification(body, tokens)
+        sys.exit()

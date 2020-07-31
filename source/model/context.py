@@ -3,6 +3,8 @@ import os
 import sys
 from .database import Database
 from .senseHat import PiSenseHat
+from .pushBullet import PushBullet
+from .util import Util
 
 class Context:
     def __init__(self):
@@ -40,11 +42,13 @@ class Context:
 
     def __log_data_to_db(self):
         try:
-            parameters = (self.__timestamp, self.__temp, self.__humidity)
-            Database.insert_record("((?), (?), (?))", parameters)
+            if Util.check_float(str(self.__temp)) and Util.check_float(str(self.__humidity)):
+                parameters = (self.__timestamp, self.__temp, self.__humidity)
+                Database.insert_record("((?), (?), (?))", parameters)
+            else:
+                PushBullet.raise_error("Fail to log data to database, invalid temperature or humidity")
         except:
-            print("Fail to log data to database")
-            sys.exit()
+            PushBullet.raise_error("Fail to log data to database")
 
     def get_context_report_record(self):        
         return self.__get_overall_status() + "\n" + self.get_context_message() + "\n"

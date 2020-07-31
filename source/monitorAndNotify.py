@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import datetime
-import sys
 from model.preference import Preference
 from model.context import Context
 from model.pushBullet import PushBullet
@@ -28,8 +27,7 @@ def check_tb():
             )
             preference.create_new_table = False
         except:
-            PushBullet.send_notification("From Raspberry Pi", "Fail to create new database table")
-            sys.exit()
+            PushBullet.raise_error("From Raspberry Pi", "Fail to create new database table")
 
 def check_context():
     preference.check_context(context)
@@ -50,7 +48,8 @@ def reset():
             preference.comfortable_status = True
 
 def push_last_noti():
-    noti_body = "Average temperature of the day: " + get_avg_temp() + " Celsius"
+    noti_body = "Today is a good day\n"
+    noti_body += "Average temperature of the day: " + get_avg_temp() + " Celsius"
     noti_body += "\nAverage humidity of the day: " + get_avg_humidity() + " %"
     noti_body += "\nSee you tomorrow! Good night"
     PushBullet.send_notification("From Raspberry Pi", noti_body)

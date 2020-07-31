@@ -3,16 +3,18 @@
 from flask import Flask, request, jsonify
 from model.database import Database
 from model.context import Context
+from model.preference import Preference
 from model.util import Util
 
 app = Flask(__name__)
+preference = Preference()
 
 @app.route('/get/newest/context', methods=['GET'])
 def get_context():
     try:
         return get_latest_context()
     except:
-        return "Fail to get context"
+        return "Fail to get latest context record from database, required table may not exist"
 
 def get_latest_context():
     record = Database.select_a_record("*",  " ORDER BY timestamp DESC LIMIT 1")
@@ -26,8 +28,11 @@ def get_latest_context():
 @app.route('/upload/context', methods=['POST'])
 def upload_context():
     try:
-        temp = request.json['temp']
-        humidity = request.json['humidity']
+        try:
+            temp = request.json['temp']
+            humidity = request.json['humidity']
+        except:
+            return "Missing temp or humidity"
         if Util.check_float(str(temp)) and Util.check_float(str(humidity)):
             Context().update_context(temp, humidity, None, True)
             return "Successfully upload new context"
@@ -49,7 +54,7 @@ def update_temp():
         else:
             return "Wrong temperture format, invalid number"
     except:
-        return "Fail to update temperature"
+        return "Temperature is not updated"
 
 def update_humidity():
     try:
@@ -60,7 +65,7 @@ def update_humidity():
         else:
             return "Wrong humidity format, invalid number"
     except:
-        return "Fail to update humidity"
+        return "Humidity is not updated"
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

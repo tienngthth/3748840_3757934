@@ -9,9 +9,11 @@ from model.fileHandle import File
 from electronicDie import roll_dice
 
 def find_first_player(player_1, player_2):
-    PiSenseHat.show_message("Welcome ~ First roll to find first player")
+    PiSenseHat.show_message("Welcome to THE DICE ~")
+    PiSenseHat.show_message("Please press joy stick to start every shaking ~")
+    PiSenseHat.show_message("First roll to find first player ~")
     while player_1.roll_dice() == player_2.roll_dice():
-        PiSenseHat.show_message("A tie! ~ One more time")
+        PiSenseHat.show_message("A tie! ~ One more time ~")
     if player_2.get_dice_value() > player_1.get_dice_value():
         players_order = (player_2, player_1)
         PiSenseHat.show_message("P2 first!")
@@ -24,15 +26,15 @@ def play_game(players_order):
     while True:
         for player in players_order:
             if player.play():
-                return "Player " + player.get_name() + " wins the game with " +  str(player.get_score()) + " scores"
+                return "Player " + player.get_name() + " wins with " +  str(player.get_score()) + " points"
             else:
-                PiSenseHat.show_message("P" + player.get_name() + " has " + str(player.get_score()) + " scores", blu, 0.06)
+                PiSenseHat.show_message("P" + player.get_name() + " has " + str(player.get_score()) + " points", blu, 0.06)
 
 def end_game(winning_info):
     PiSenseHat.show_message("Congratz!! " + winning_info, ora, 0.06)
     record = str(datetime.datetime.now().replace(microsecond = 0)) + ": " + winning_info + "\n"
-    print("Input game winner report file name. Default name is winner.csv")
-    File.write_csv(Util.get_file_name("winner", ".csv"), record)
+    message = "Input game winners report file name. Default name is winner.csv"
+    File.write_csv(Util.get_file_name("winner", ".csv", message), record)
 
 def start_game():
     player_1 = Player("1")

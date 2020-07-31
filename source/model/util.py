@@ -1,3 +1,4 @@
+import sys
 from .fileHandle import File
 
 class Util:
@@ -9,10 +10,17 @@ class Util:
             return float_string.isdigit()
 
     @staticmethod
-    def get_file_name(default_name, extension):
+    def get_file_name(default_name, extension, message):
+        print(message)
         file_name = File.get_file_name()
         if file_name == None:
             file_name = default_name
         return file_name + extension
+
+    @staticmethod
+    def raise_error(message):
+        print(message)
+        sys.exit()
+
 
    

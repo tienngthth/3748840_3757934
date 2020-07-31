@@ -1,7 +1,7 @@
 from time import sleep
 from .score import Score
 from .dice import Dice
-from .senseHat import PiSenseHat, blu
+from .senseHat import PiSenseHat, vio
 from .dice import Dice
 
 class Player:
@@ -17,8 +17,8 @@ class Player:
         return self.__winner
 
     def roll_dice(self):
-        PiSenseHat.show_message("Player")
-        PiSenseHat.show_letter(self.__name)
+        PiSenseHat.show_message("Player", vio, 0.05)
+        PiSenseHat.show_letter(self.__name, vio)
         PiSenseHat.detect_stick()
         while not PiSenseHat.detect_stick():
             pass

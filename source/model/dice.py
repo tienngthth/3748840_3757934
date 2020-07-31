@@ -83,7 +83,6 @@ class Dice:
     @staticmethod
     def wait_for_shake():
         while(Dice.compare_reading(Dice.current_reading, Dice.old_reading) < Dice.shaking_threshold):
-            print("not shaking")
             Dice.old_reading = Dice.current_reading
             time.sleep(0.5)
             Dice.current_reading = PiSenseHat.get_accelerometer()
@@ -91,13 +90,10 @@ class Dice:
     @staticmethod
     def detect_shake():
         while(Dice.compare_reading(Dice.current_reading, Dice.old_reading) > Dice.shaking_threshold):
-            print("shaking")
             Dice.old_reading = Dice.current_reading
             time.sleep(Dice.speed)
             Dice.current_reading = PiSenseHat.get_accelerometer()
             Dice.display_dice()
-        print("done")
-        print(Dice.dice_value)
 
     @staticmethod
     def compare_reading(first_reading, second_reading):
@@ -108,8 +104,7 @@ class Dice:
 
     @staticmethod
     def display_dice():
-        # Dice.dice_value = randint(1, 6)
-        Dice.dice_value = 6
+        Dice.dice_value = randint(1, 6)
         Dice.display()
 
     @staticmethod
