@@ -20,6 +20,18 @@ class Client:
       else:
          self.__server_mac_address = self.__search(server_name)
 
+   # Search for device based on device's name
+   def __search(self, server_name):
+      for i in range(5):
+         sleep(3) #Sleep three seconds 
+         nearby_devices = bluetooth.discover_devices()
+
+         for server_mac_address in nearby_devices:
+               if server_name == bluetooth.lookup_name(server_mac_address, timeout = 5):
+                  return server_mac_address
+
+      Util.raise_error("Can not detect specified nearby device")
+
    def __open_socket(self):
       try:
          self.__socket.connect((self.__server_mac_address, self.__port))

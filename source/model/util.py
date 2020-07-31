@@ -19,16 +19,16 @@ class Util:
     @staticmethod
     def get_file_name(default_name, extension, message):
         print(message)
-        file_name = Util.get_input("Please input letter only, no spaces or special characters")
+        file_name = Util.get_user_input(default_name, "Please input letter only, no spaces or special characters")
         if file_name != default_name:
             while not File.check_file_name(file_name):
-                file_name = Util.get_input("Please input letter only, no spaces or special characters")
+                file_name = Util.get_user_input(default_name, "Please input letter only, no spaces or special characters")
                 if file_name == default_name:
                     break
         return file_name + extension
 
     @staticmethod
-    def get_input(default_input, message):
+    def get_user_input(default_input, message):
         print(message)
         user_input = Util.promt_message()
         if user_input == None:

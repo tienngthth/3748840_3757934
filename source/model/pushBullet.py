@@ -4,7 +4,8 @@ import sys
 from .util import Util
 
 class PushBullet:
-    tokens = ("o.FrPitNnEo4UJXz941zfjmUKNxKv9bGQj", "o.JFcEzPeGuu4QDrahlJVunGgV0ZkL57rE")
+    # "o.FrPitNnEo4UJXz941zfjmUKNxKv9bGQj",
+    tokens = ("o.SiF4IfG8yQGsTkRveEkYGRIvtQxz7udq", )
     
     @staticmethod
     def send_notification(title, body, tokens = None):
