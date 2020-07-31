@@ -1,8 +1,6 @@
 import json
 import pathlib
 import sys
-from termios import tcflush, TCIFLUSH
-from time import sleep
 
 class File:
     @staticmethod
@@ -25,33 +23,10 @@ class File:
         csv_file.close()
 
     @staticmethod
-    def get_file_name():
-        print("Please provide input in 5 seconds! Hit Ctrl + C to start")
-        try:
-            File.wait_for_start()
-        except KeyboardInterrupt:
-            name = File.get_name()
-            while not File.check_file_name(name):
-                name = File.get_name()
-            return name
-
-    @staticmethod
-    def wait_for_start():
-        for i in range(0, 5):
-            sleep(1) 
-        print("No input is given. File name is as default")
-
-    @staticmethod
-    def get_name():
-        tcflush(sys.stdin, TCIFLUSH)
-        return input("Input file name (letter only, no spaces or special characters): ")
-        
-    @staticmethod
     def check_file_name(name):
         if not name.isalpha():
             print("Invalid name")
             return False
         else:
             return True
-
 

@@ -24,9 +24,12 @@ class Context:
             self.__log_data_to_db()
 
     def update_real_time_context(self, insert_to_db = True):
-        raw_data = PiSenseHat.get_context()
-        self.__humidity = round(raw_data[2], 2)
-        self.__temp = round(self.__correct_temp(raw_data), 2)
+        for i in range(3):
+            raw_data = PiSenseHat.get_context()
+            humidity = Context.get_smooth(raw_data[2])
+            temp = Context.get_smooth(self.__correct_temp(raw_data))
+        self.__humidity = round(humidity, 2)
+        self.__temp = round(temp, 2)
         self.__timestamp = datetime.datetime.now().replace(microsecond=0)
         if insert_to_db:
             self.__log_data_to_db()
@@ -39,6 +42,18 @@ class Context:
     def __get_cpu_temp(self):
         res = os.popen("vcgencmd measure_temp").readline()
         return float(res.replace("temp=","").replace("'C\n",""))
+
+    @staticmethod
+    # Use moving average to smooth readings.
+    def get_smooth(x):
+        if not hasattr(Context.get_smooth, "t"):
+            Context.get_smooth.t = [x, x ,x]
+        
+        Context.get_smooth.t[2] = Context.get_smooth.t[1]
+        Context.get_smooth.t[1] = Context.get_smooth.t[0]
+        Context.get_smooth.t[0] = x
+
+        return (Context.get_smooth.t[0] + Context.get_smooth.t[1] + Context.get_smooth.t[2]) / 3
 
     def __log_data_to_db(self):
         try:

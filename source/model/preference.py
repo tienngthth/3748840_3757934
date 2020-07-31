@@ -69,7 +69,7 @@ class Preference:
         self.__check_cconfig_value_order(values[4:])
         
     def __check_cconfig_value_order(self, values):
-        for i in range(0,3):
+        for i in range(3):
             if values[i] > values[i + 1]:
                 PushBullet.raise_error("From Raspberry Pi", "Invalid context preference values order")
 

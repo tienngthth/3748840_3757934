@@ -5,7 +5,7 @@ from model.senseHat import PiSenseHat, blu, gre, red, whi
 from model.preference import Preference
 from model.database import Database
 from model.context import Context
-from monitorAndNotify import start_evaluating_context
+from monitorAndNotify import evaluate_context
 
 def start_read_and_display_program():
     global preference, context
@@ -49,5 +49,5 @@ def display_context():
     PiSenseHat.show_letter("*")
 
 if __name__ == "__main__":
-    start_evaluating_context()
+    evaluate_context()
     start_read_and_display_program() 

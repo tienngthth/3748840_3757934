@@ -25,7 +25,7 @@ def check_tb():
             Database.create_tb(
                 "(timestamp DATETIME, temp NUMERIC, humidity NUMERIC)"
             )
-            preference.create_new_table = False
+            print(preference.create_new_table)
         except:
             PushBullet.raise_error("From Raspberry Pi", "Fail to create new database table")
 
