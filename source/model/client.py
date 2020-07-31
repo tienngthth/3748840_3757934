@@ -22,7 +22,7 @@ class Client:
 
    # Search for device based on device's name
    def __search(self, server_name):
-      for i in (0, 5):
+      for i in range(5):
          sleep(3) #Sleep three seconds 
          nearby_devices = bluetooth.discover_devices()
 

@@ -6,6 +6,7 @@ from model.server import Server
 from model.context import Context
 from model.preference import Preference
 from model.senseHat import PiSenseHat
+from model.util import Util
 
 def run_server():
     global server
@@ -32,7 +33,11 @@ def send_current_context():
     server.send_message(context.get_context_report_record())
 
 def run_client():
-    client = Client(server_name = "CuongvTien", server_mac_address = "DC:A6:32:4A:0C:41")
+    promt_name_message = "Input server name. Default name is CuongvTien"
+    server_name = Util.get_name("CuongvTien", promt_name_message)
+    promt_mac_message = "Input server mac address. Default mac address is DC:A6:32:4A:0C:41"
+    server_mac_address = Util.get_name("CuongvTien", promt_mac_message)
+    client = Client(server_name = server_name, server_mac_address = server_mac_address)
     while True:
         message = client.retrieve_message()
         if message.find("Bye") != -1:
