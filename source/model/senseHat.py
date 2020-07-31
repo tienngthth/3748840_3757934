@@ -52,12 +52,14 @@ class PiSenseHat:
         return False
 
     @staticmethod
-    def detect_sticks():
-        count = 0
+    def detect_stick_middle():
         for event in PiSenseHat.sense.stick.get_events():
             if event.action == "pressed":
-                count += 1
-        return count
+                if event.direction == "middle":
+                    return "middle"
+                else:
+                    return "pressed"
+        return False
 
     @staticmethod
     def get_accelerometer(): 
