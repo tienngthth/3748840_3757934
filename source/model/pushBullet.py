@@ -26,5 +26,5 @@ class PushBullet:
 
     @staticmethod
     def raise_error(title, body, tokens = None):
-        PushBullet.send_notification(body, tokens)
+        PushBullet.send_notification(title, body, tokens)
         sys.exit()
