@@ -1,13 +1,13 @@
 # Python & Sense HAT programming
-
-```RMIT University Vietnam```
+```
+RMIT University Vietnam
 Course: COSC2790 Programming Internet of Things
 Semester: 2020A
 Assessment: Assessment 1: Python & Sense HAT programming
 Student Name - ID: 
     1. Nguyen Quoc Cuong - s3748840
     2. Nguyen Thi Thuy Tien - s3757934
-
+```
 ## Getting Started
 
 This is a small IoT application working on Raspberry Pi and Sense HAT using Python language to serve a number of different tasks and requirements. During the development process, a variety of technologies and tools have been applied. Following is the description of the project repository.
