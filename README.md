@@ -41,7 +41,7 @@ Besides working on functional requirements, the team also put effort in developi
 
 ### Context 
 
-A script is developed to run automatically every minute, get the current environment context (time, temperature, humidity) and log the record in to the SQLite database. When working with database commands, SQL Injection is avoided by using parameters.
+A script is developed to run automatically every minute, get the current environment context (time, temperature, humidity) from Sense HAT sensors, preprocess the data to elimitate errors and log the record in to the SQLite database. When working with database commands, SQL Injection is avoided by using parameters.
 
 The recorded contexts are evaluated accordingly with the user preferences in the config file. The evaluated result is used to:
 
@@ -51,7 +51,7 @@ The recorded contexts are evaluated accordingly with the user preferences in the
 
     Displayed in the Sense HAT with appropriate colors for each status. 
 
-Another script is used to manually get the last context record from the database and save the record with its corressponding status and message in a csv file. The file has a default name but can be changed by user as well. 
+Another script is used to manually get the last context record from the database and save the record with its corressponding status and message in a csv file. The file has a default name but can be changed by user input as well. 
 
 When Pi boots, a script is scheduled to run automatically to open RESTful APIs connection allowing user to perform 3 methods:
 
@@ -69,12 +69,14 @@ Bluetooth client, server and socket concept have been implemented to connect 2 R
 
 At boot up, a Pi is scheduled to auto detect nearby devices and send PushBullet notification to announce device name/mac address if any is found. 
 
-User can choose to connect with the preferred Pi by its name or mac address and initiate the connection by manually running another script. After connecting, a message is sent to inform the other pi about the current context and status. Next context message can be sent by pressing the joy stick up, down, left, right after that first time. Disconnect by pressing the joy stick in the middle. 
+User can choose to connect with the preferred Pi by its name or mac address and initiate the connection by manually running another script. After connecting, a message is sent to inform the other pi about the current context and status. Next context message can be sent by pressing the Sense HAT's joy stick up, down, left, right after that first time. Connection is closed by pressing the joy stick in the middle. 
 
 ### Game
 
+An application allows the Pi to display die values to Sense HAT in random manner when being shaked by getting, shaking motion is detected by the Sense HAT's acceleremeter values.
 
-
+Utilizing the application, a game is created for 2 players with clear guidance and feedback during the game. Instruction and updated points are show on Sense HAT for every turn. The players first roll dice to find who goes first, the one who get the higher die value goes first, roll again if its a tie. After that, players take turn to shake pi, roll dice and get points until the game ends with the first player to get 30 points. Winner number, points, and current time will be reported in a csv file. The file has a default name but can be changed by user as well. 
+ 
 ## Acknowledgments
 
 [1] "get_smooth", calibrating function is taken from lecutre's week 3 code archive. 
