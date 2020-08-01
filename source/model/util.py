@@ -18,26 +18,23 @@ class Util:
 
     @staticmethod
     def get_file_name(default_name, extension, message):
-        print(message + ". Please input letter only, no spaces or special characters")
-        file_name = Util.promt_message()
-        if file_name == None:
-            file_name = default_name
-        else:
+        print(message)
+        file_name = Util.get_input("Please input letter only, no spaces or special characters")
+        if file_name != default_name:
             while not File.check_file_name(file_name):
-                file_name = Util.promt_message()
-                if file_name == None:
-                    file_name = default_name
+                file_name = Util.get_input("Please input letter only, no spaces or special characters")
+                if file_name == default_name:
                     break
         return file_name + extension
 
     @staticmethod
-    def get_name(default_name, message):
+    def get_input(default_input, message):
         print(message)
-        name = Util.promt_message()
-        if name == None:
-            return default_name
+        user_input = Util.promt_message()
+        if user_input == None:
+            return default_input
         else:
-            return name
+            return user_input
 
     @staticmethod
     def promt_message():
@@ -45,8 +42,8 @@ class Util:
         try:
             Util.wait_for_start()
         except KeyboardInterrupt:
-            name = Util.get_input()
-            return name
+            user_input = Util.get_input()
+            return user_input
 
     @staticmethod
     def wait_for_start():
