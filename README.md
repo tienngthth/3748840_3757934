@@ -65,7 +65,11 @@ A test script is also prepared to test the mentioned APIs with pass and fail sce
 
 ### Bluetooth
 
+Bluetooth client, server and socket concept have been implemented to connect 2 Raspberry Pi. 
 
+At boot up, a Pi is scheduled to auto detect nearby devices and send PushBullet notification to announce device name/mac address if any is found. 
+
+User can choose to connect with the preferred Pi by its name or mac address and initiate the connection by manually running another script. After connecting, a message is sent to inform the other pi about the current context and status. Next context message can be sent by pressing the joy stick up, down, left, right after that first time. Disconnect by pressing the joy stick in the middle. 
 
 ### Game
 
