@@ -44,16 +44,23 @@ Besides working on functional requirements, the team also put effort in developi
 A script is developed to run automatically every minute, get the current environment context (time, temperature, humidity) and log the record in to the SQLite database. When working with database commands, SQL Injection is avoided by using parameters.
 
 The recorded contexts are evaluated accordingly with the user preferences in the config file. The evaluated result is used to:
+
     Alert user in terms of uncomfortable (only 1 notification per day, reset at the end of the day) and dangerous (everytime) situation via PushBulet API. 
+
     If the weather is good all day, then a last message will be sent at the end of the day to inform the average temperature and humidity of that day.
+
     Displayed in the Sense HAT with appropriate colors for each status. 
 
 Another script is used to manually get the last context record from the database and save the record with its corressponding status and message in a csv file. The file has a default name but can be changed by user as well. 
 
 When Pi boots, a script is scheduled to run automatically to open RESTful APIs connection allowing user to perform 3 methods:
+
     1. GET: retrieve the latest record in JSON format
+
     2. POST: upload a new record to database with current time
+
     3. PUT: update the latest record in database
+    
 A test script is also prepared to test the mentioned APIs with pass and fail scenarios.
 
 ### Bluetooth
