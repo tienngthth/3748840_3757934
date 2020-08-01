@@ -1,5 +1,5 @@
 # Python & Sense HAT programming
-```
+``` 
 RMIT University Vietnam
 Course: COSC2790 Programming Internet of Things
 Semester: 2020A
@@ -12,7 +12,7 @@ Student Name - ID:
 
 This is a small IoT application working on Raspberry Pi and Sense HAT using Python language to serve a number of different tasks and requirements. During the development process, a variety of technologies and tools have been applied. Following is the description of the project repository.
 
-### Repo status
+## Repo status
 
 This respository is private and shared between 2 contributors as stated above.
 
@@ -20,7 +20,7 @@ This respository is private and shared between 2 contributors as stated above.
 
 There are 4 different branches beside the default master including bluetooth, context, emoji and game. Contributors are using different branches to develop the corresponding solutions. 
 
-## Activities
+### Activities
 
 This project is being developed for around 4 weeks. Git and git hub have been used from the beginning of the project to manage the work and help contributors to collaborate with each other. 
 
@@ -31,6 +31,8 @@ Contributors pull code from the appropriate branch everytime to continue working
 Finalized solution is merged to master branch after being checked for the first half of the cycle. 
 For the second half of the cycle when context solution is being finalized, it also acts as a master branch when providing a new structurized format for all the project's modules, later solutions are checked and merged to this context branch. 
 ```
+
+## Solutions
 
 ## Acknowledgments
 
