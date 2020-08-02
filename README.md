@@ -41,7 +41,7 @@ Besides working on functional requirements, the team also put effort in developi
 
 ### Context 
 
-A script is developed to run automatically every minute, get the current environment context (time, temperature, humidity) from Sense HAT sensors, preprocess the data to elimitate errors and log the record in to the SQLite database. When working with database commands, SQL Injection is avoided by using parameters.
+A script is developed to run automatically every minute, get the current environmental context (time, temperature, humidity) from Sense HAT sensors, preprocess the data to elimitate errors and log the record in to the SQLite database. When working with database commands, SQL Injection is avoided by using parameters.
 
 The recorded contexts are evaluated accordingly with the user preferences in the config file. The evaluated result is used to:
 
