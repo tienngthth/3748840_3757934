@@ -1,3 +1,6 @@
+"""
+Class Score is to store, update score for a particular player and check for winner 
+"""
 class Score:
     def __init__(self, target_score = 30):
         self.__score = 0

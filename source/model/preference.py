@@ -4,7 +4,11 @@ from .context import Context
 from .util import Util
 from .pushBullet import PushBullet
 
+"""
+"""
 class Preference:
+    
+    #Initialize instance of the preference
     def __init__(self):
         self.__cold_max = None
         self.__comfortable_min_temp = None
@@ -20,6 +24,7 @@ class Preference:
         self.__status_file_name = "status.json"
         self.read_preference()
 
+    #Read preference from json file
     def read_preference(self):
         try:
             config_json = File.read_json(self.__config_file_name)
@@ -29,7 +34,9 @@ class Preference:
             sys.exit()
         self.__parse_json(config_json, status_json)
 
+    #Match json content to preference variables
     def __parse_json(self, config_json, status_json):
+        #Validate json content
         self.__validate_config_values(config_json)
         self.__validate_status_values(status_json)
         try:
@@ -48,30 +55,36 @@ class Preference:
         except:
             PushBullet.raise_error("Missing required values in config.json or status.json file")
 
+    #Validate status json file 
     def __validate_status_values(self, status_dict):
         if len(status_dict) != 2:
             PushBullet.raise_error("Wrong number of values in status.json")
+        #Check if all values are boolean type
         for key, value in status_dict.items():
             if type(value) is not bool:
                 PushBullet.raise_error("Wrong " + key + " data type, invalid boolean")
 
+    #Validate config json file     
     def __validate_config_values(self, config_dict):
         values = []
         if len(config_dict) != 8:
             PushBullet.raise_error("Wrong number of values in config.json")
+        #Check if all values are in valid format
         for key, value in config_dict.items():
             if not Util.check_float(str(value)):
                 PushBullet.raise_error("Wrong " + key + " data type, invalid number")
             else:
                 values.append(value)
-        self.__check_cconfig_value_order(values[:4])
-        self.__check_cconfig_value_order(values[4:])
-        
-    def __check_cconfig_value_order(self, values):
+        self.__check_config_value_order(values[:4])
+        self.__check_config_value_order(values[4:])
+    
+    #Check if all values are in correct order
+    def __check_config_value_order(self, values):
         for i in range(3):
             if values[i] > values[i + 1]:
                 PushBullet.raise_error("Invalid context preference values order")
 
+    #Match variables with values
     def __set_preference(
         self, 
         cold_max, comfortable_min_temp, 
@@ -91,10 +104,12 @@ class Preference:
         self.comfortable_status = comfortable_status
         self.create_new_table = create_new_table
 
+    #Check all environmental context
     def check_context(self, context):
         self.__check_humidity(context)
         self.__check_temp(context)
 
+    #Check humidity
     def __check_humidity(self, context):
         if context.humidity > self.__humid_min:
             context.humidity_status = "too humid"
@@ -107,6 +122,7 @@ class Preference:
         else:
             context.humidity_status = "good"
 
+    #Check temperature
     def __check_temp(self, context):
         if context.temp > self.__hot_min:
             context.temp_status = "too hot"
@@ -119,6 +135,8 @@ class Preference:
         else:
             Context.temp_status = "good"
 
+
+    #Getters and setters
     @property
     def comfortable_status(self):
         return self.__comfortable_status
