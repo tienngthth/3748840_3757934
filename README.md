@@ -7,6 +7,7 @@ Assessment: Assessment 1: Python & Sense HAT programming
 Student Name - ID: 
     1. Nguyen Quoc Cuong - s3748840
     2. Nguyen Thi Thuy Tien - s3757934
+https://github.com/tienngthth/3748840_3757934
 ```
 ## Getting Started
 
