@@ -53,7 +53,7 @@ class Database:
         Database.conn.close()
 
     @staticmethod
-    def create_tb(columns, tb_name = None, db_path = None):
+    def create_table(columns, tb_name = None, db_path = None):
         Database.setup_connection(tb_name, db_path)
         Database.curs.execute("DROP TABLE IF EXISTS "+ Database.tb_name)
         Database.curs.execute("CREATE TABLE " + Database.tb_name + columns)

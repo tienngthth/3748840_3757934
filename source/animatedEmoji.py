@@ -150,13 +150,16 @@ cat_pixels = (
     cat_pixels_1, cat_pixels_2, 
     cat_pixels_3, cat_pixels_4
 )
-    
+     
 def start_displaying_emoji():
+    # Create a list of 3 emojis
     emojis = [Emoji(rainbow_mouth_pixels), Emoji(sword_pixels), Emoji(cat_pixels)]
     stop = False
     while not stop:
+        # Loop through the list and display each emoji one by one
         for emoji in emojis:
             emoji.display()
+        # Detect pressed joy stick to stop displaying emojis
         if PiSenseHat.detect_stick():
             stop = True
 
