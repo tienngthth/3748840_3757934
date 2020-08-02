@@ -27,5 +27,5 @@ class PushBullet:
 
     @staticmethod
     def raise_error(body, title = "From Raspberry Pi", tokens = None):
-        PushBullet.send_notification(title, body, tokens)
+        PushBullet.send_notification(body, title, tokens)
         sys.exit()
