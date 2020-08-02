@@ -2,11 +2,10 @@
 # -*- coding: utf-8 -*-
 import datetime
 from model.player import Player
-from model.dice import Dice
 from model.senseHat import PiSenseHat, ora, blu
 from model.util import Util
 from model.fileHandle import File
-from electronicDie import roll_dice
+from electronicDice import roll_dice
 
 def find_first_player(player_1, player_2):
     PiSenseHat.show_message("Welcome to THE DICE ~")

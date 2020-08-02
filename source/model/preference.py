@@ -25,8 +25,7 @@ class Preference:
             config_json = File.read_json(self.__config_file_name)
             status_json = File.read_json(self.__status_file_name)
         except:
-            message = "Preference or status file is missing or having wrong content format, invalid json format"
-            PushBullet.send_notification("From Raspberry Pi", message)
+            PushBullet.send_notification("Preference or status file is missing or having wrong content format, invalid json format")
             sys.exit()
         self.__parse_json(config_json, status_json)
 
@@ -47,22 +46,22 @@ class Preference:
                 status_json["create_new_table"]
             )
         except:
-            PushBullet.raise_error("From Raspberry Pi", "Missing required values in config.json or status.json file")
+            PushBullet.raise_error("Missing required values in config.json or status.json file")
 
     def __validate_status_values(self, status_dict):
         if len(status_dict) != 2:
-            PushBullet.raise_error("From Raspberry Pi", "Wrong number of values in status.json")
+            PushBullet.raise_error("Wrong number of values in status.json")
         for key, value in status_dict.items():
             if type(value) is not bool:
-                PushBullet.raise_error("From Raspberry Pi", "Wrong " + key + " data type, invalid boolean")
+                PushBullet.raise_error("Wrong " + key + " data type, invalid boolean")
 
     def __validate_config_values(self, config_dict):
         values = []
         if len(config_dict) != 8:
-            PushBullet.raise_error("From Raspberry Pi", "Wrong number of values in config.json")
+            PushBullet.raise_error("Wrong number of values in config.json")
         for key, value in config_dict.items():
             if not Util.check_float(str(value)):
-                PushBullet.raise_error("From Raspberry Pi", "Wrong " + key + " data type, invalid number")
+                PushBullet.raise_error("Wrong " + key + " data type, invalid number")
             else:
                 values.append(value)
         self.__check_cconfig_value_order(values[:4])
@@ -71,7 +70,7 @@ class Preference:
     def __check_cconfig_value_order(self, values):
         for i in range(3):
             if values[i] > values[i + 1]:
-                PushBullet.raise_error("From Raspberry Pi", "Invalid context preference values order")
+                PushBullet.raise_error("Invalid context preference values order")
 
     def __set_preference(
         self, 

@@ -25,9 +25,9 @@ def check_tb():
             Database.create_tb(
                 "(timestamp DATETIME, temp NUMERIC, humidity NUMERIC)"
             )
-            print(preference.create_new_table)
+            preference.create_new_table = False
         except:
-            PushBullet.raise_error("From Raspberry Pi", "Fail to create new database table")
+            PushBullet.raise_error("Fail to create new database table")
 
 def check_context():
     preference.check_context(context)
@@ -35,13 +35,13 @@ def check_context():
         noti_body = context.get_context_message()
         if context.temp_status.find("too") == -1 and context.humidity_status.find("too") == -1:
             if preference.comfortable_status == True:
-                PushBullet.send_notification("From Raspberry Pi", noti_body)
+                PushBullet.send_notification(noti_body)
                 preference.comfortable_status = False
         else:
-            PushBullet.send_notification("From Raspberry Pi", noti_body)
+            PushBullet.send_notification(noti_body)
     
 def reset():
-    if (datetime.datetime.now().strftime("%H:%M") == "23:46"):
+    if (datetime.datetime.now().strftime("%H:%M") == "23:59"):
         if (preference.comfortable_status == True):
             push_last_noti()
         else:
@@ -52,7 +52,7 @@ def push_last_noti():
     noti_body += "Average temperature of the day: " + get_avg_temp() + " Celsius"
     noti_body += "\nAverage humidity of the day: " + get_avg_humidity() + " %"
     noti_body += "\nSee you tomorrow! Good night"
-    PushBullet.send_notification("From Raspberry Pi", noti_body)
+    PushBullet.send_notification(noti_body)
 
 def get_avg_temp():
     try:
@@ -61,7 +61,7 @@ def get_avg_temp():
             " WHERE timestamp >= date('now','-1 day')"
         ), 2))
     except:
-        PushBullet.send_notification("From Raspberry Pi", "Fail to get average temperature")
+        PushBullet.send_notification("Fail to get average temperature")
         return 0.00
 
 def get_avg_humidity():
@@ -71,7 +71,7 @@ def get_avg_humidity():
             " WHERE timestamp >= date('now','-1 day')"
         ), 2))
     except:
-        PushBullet.send_notification("From Raspberry Pi", "Fail to get average humidity")
+        PushBullet.send_notification("Fail to get average humidity")
         return 0.00
 
 def save_status():

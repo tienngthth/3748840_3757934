@@ -63,7 +63,7 @@ class Context:
             else:
                 PushBullet.raise_error("Fail to log data to database, invalid temperature or humidity")
         except:
-            PushBullet.raise_error("Fail to log data to database")
+            PushBullet.raise_error("Fail to log data to database, please check your database and table")
 
     def get_context_report_record(self):        
         return self.__get_overall_status() + "\n" + self.get_context_message() + "\n"

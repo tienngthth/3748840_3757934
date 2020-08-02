@@ -12,12 +12,12 @@ def start_searching(server_name = "CuongvTien"):
          if device_name.find(server_name) != -1:
             nearby_devices_mac_address.append(device_name + ": " + server_mac_address)
    if len(nearby_devices_mac_address) == 0:
-      PushBullet.raise_error("From Raspberry Pi", "Can not detect nearby devices with CuongvTien key word")
+      PushBullet.raise_error("Can not detect nearby devices with CuongvTien key word")
    else:
       message = ""
       for address in nearby_devices_mac_address:
          message += ( address + "\n")
-      PushBullet.send_notification("From Raspberry Pi", message)
+      PushBullet.send_notification(message)
 
 if __name__ == "__main__":
     start_searching()

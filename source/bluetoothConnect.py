@@ -34,9 +34,9 @@ def send_current_context():
 
 def run_client():
     promt_name_message = "Input server name. Default name is CuongvTien"
-    server_name = Util.get_input("CuongvTien", promt_name_message)
+    server_name = Util.get_user_input("CuongvTien", promt_name_message)
     promt_mac_message = "Input server mac address. Default mac address is DC:A6:32:4A:0C:41"
-    server_mac_address = Util.get_input("DC:A6:32:4A:0C:41", promt_mac_message)
+    server_mac_address = Util.get_user_input("DC:A6:32:4A:0C:41", promt_mac_message)
     client = Client(server_name = server_name, server_mac_address = server_mac_address)
     while True:
         message = client.retrieve_message()

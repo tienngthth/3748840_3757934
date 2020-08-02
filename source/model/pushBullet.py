@@ -8,7 +8,7 @@ class PushBullet:
     tokens = ("o.SiF4IfG8yQGsTkRveEkYGRIvtQxz7udq", )
     
     @staticmethod
-    def send_notification(title, body, tokens = None):
+    def send_notification(body, title = "From Raspberry Pi", tokens = None):
         if tokens == None:
             tokens = PushBullet.tokens
         data_send = {"type": "note", "title": title, "body": body}
@@ -26,6 +26,6 @@ class PushBullet:
                 Util.raise_error("Fail to send push bullet")
 
     @staticmethod
-    def raise_error(title, body, tokens = None):
+    def raise_error(body, title = "From Raspberry Pi", tokens = None):
         PushBullet.send_notification(title, body, tokens)
         sys.exit()
