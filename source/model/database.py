@@ -18,7 +18,7 @@ class Database:
         if db_path != None:
             Database.db_path = db_path
         if tb_name != None:
-            Database.db_path = db_path
+            Database.tb_name = tb_name
         Database.conn = sqlite3.connect(Database.db_path)
         Database.curs = Database.conn.cursor()  
 
