@@ -2,7 +2,7 @@ import requests
 import json
 
 class PushBullet:
-    tokens = ("o.FrPitNnEo4UJXz941zfjmUKNxKv9bGQj", "o.JFcEzPeGuu4QDrahlJVunGgV0ZkL57rE")
+    tokens = ("", "")
     
     @staticmethod
     def send_notification(title, body, tokens = None):
