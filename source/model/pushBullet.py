@@ -9,7 +9,7 @@ Class PushBullet is to connect to PushBullet's API and send appropriate messages
 """
 
 class PushBullet:
-    tokens = ("o.SiF4IfG8yQGsTkRveEkYGRIvtQxz7udq", )
+    tokens = ("", )
     
     #Send message
     @staticmethod
